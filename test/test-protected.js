@@ -1,6 +1,6 @@
 'use strict';
 
-const { TEST_DATABASE_URL, TEST_PORT } = require('./config');
+const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
 //global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');

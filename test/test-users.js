@@ -1,6 +1,7 @@
 'use strict';
+//require('dotenv').config(); // this is unconditional, which will require heroku to install it (which is not needed), but since it is listed in core dependencies, it at least won't break heroku. Later learn to do it conditionally.
 
-const { TEST_DATABASE_URL, TEST_PORT } = require('./config');
+const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
 //global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
@@ -185,7 +186,7 @@ describe('/api/user', function () {
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should reject users with password less than ten characters', function () {
+      it('Should reject users with password fewer than ten characters', function () {
         return chai
           .request(app)
           .post('/api/users')
