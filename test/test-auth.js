@@ -1,6 +1,7 @@
 'use strict';
 
-global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
+const { TEST_DATABASE_URL, TEST_PORT } = require('./config');
+//global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -19,7 +20,7 @@ describe('Auth endpoints', function () {
   const password = 'examplePass';
 
   before(function () {
-    return runServer();
+    return runServer(TEST_DATABASE_URL, TEST_PORT);
   });
 
   after(function () {

@@ -5,8 +5,7 @@ const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 
 const { User } = require('../users/models');
 const { JWT_SECRET } = require('../config');
-console.log(JWT_SECRET);
-console.log(process.env.JWT_SECRET);
+
 const basicStrategy = new BasicStrategy((username, password, callback) => {
   let user;
   User.findOne({ username: username })
