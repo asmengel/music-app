@@ -36,6 +36,30 @@ describe('Protected endpoint', function () {
     return User.remove({});
   });
 
+ // get api/music/artist
+ // 20 artists (no more than)
+ // res is json object
+ // each artist match artistList.apiRepr()
+ // if fail 500
+
+// post api/music/artist
+// currently broken
+
+// put api/music/artist/:id
+// broken (post also broken)
+
+// delete api/music/artist/:id
+
+// post /api/music/playlist
+// working
+
+// put /api/music/playlist/:id
+// working
+
+
+
+
+
   describe.skip('/api/music', function () {
     it('Should reject requests with no credentials', function () {
       return chai
