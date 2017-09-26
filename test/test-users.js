@@ -36,6 +36,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   });
 
   beforeEach(function () {
+    User.remove({});
     const fakeUsers = [];
     for (let i=0; i<10; i++){
       fakeUsers.push(fakeUser());
@@ -45,15 +46,15 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   });
 
   afterEach(function () {
-    console.log('after each');
-    //return User.remove({});
+    //console.log('after each');
   });
 
   describe('/api/users', function () {
     describe('POST', function () {
       it('Should reject users with missing username', function () {
         let fakeU = fakeUser();
-        fakeU.username = '';
+        delete fakeU.username;
+        console.log(fakeU);
         return chai
           .request(app)
           .post('/api/users')
@@ -74,7 +75,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with missing password', function () {
         let fakeU = fakeUser();
-        fakeU.password = '';
+        delete fakeU.password;
         return chai
           .request(app)
           .post('/api/users')
@@ -141,7 +142,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with non-trimmed username', function () {
         let fakeU = fakeUser();
-        fakeU.username += ' untrimmed ';
+        fakeU.username = ' untrimmed ';
         return chai
           .request(app)
           .post('/api/users')
@@ -165,7 +166,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with non-trimmed password', function () {
         let fakeU = fakeUser();
-        fakeU.password += ' untrimmed ';
+        fakeU.password = ' untrimmed ';
         return chai
           .request(app)
           .post('/api/users')
@@ -189,7 +190,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with empty username', function () {
         let fakeU = fakeUser();
-        fakeU.username += '';
+        fakeU.username = '';
         return chai
           .request(app)
           .post('/api/users')
@@ -212,7 +213,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with password fewer than ten characters', function () {
         let fakeU = fakeUser();
-        fakeU.password += 'abc';
+        fakeU.password = 'abc';
         return chai
           .request(app)
           .post('/api/users')
@@ -282,20 +283,23 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
-      it('Should create a new user', function () {
+      it.only('Should create a new user', function () {
         let fakeU = fakeUser();
+        console.log('fakeU ',fakeU);
         return chai
           .request(app)
           .post('/api/users')
           .send( fakeU )
           .then(res => {
+            console.log('body ',res.body);
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys('username');
+            expect(res.body).to.have.all.keys('username', 'firstName', 'lastName');
             expect(res.body.username).to.equal(fakeU.username);
             return User.findOne({ username: fakeU.username });
           })
           .then(user => {
+            console.log('user ', user);
             expect(user).to.not.be.null;
             return user.validatePassword(fakeU.password);
           })
