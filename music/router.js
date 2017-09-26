@@ -140,8 +140,15 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
 
 // get a playlist
 router.get('/playlist/:id', jwtAuth, (req, res) => {
+  Playlist
+  .findById(req.params.id)
+  .then(post => res.json(post.apiRepr()))
+  .catch(err => {
+    res.status(500).json({error: 'something went horribly wrong'});
+  });
   
-}); // end router.get (update a playlist)
+}); 
+// end router.get (update a playlist)
 
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
