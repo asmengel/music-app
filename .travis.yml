@@ -1,2 +1,8 @@
 language: node_js
 node_js: node
+deploy: 
+  provider: heroku
+  app: vast-island-54766
+  on:
+    repo: https://github.com/bradcgarner/music-app
+    branch: master
