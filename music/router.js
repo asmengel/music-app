@@ -118,8 +118,18 @@ router.post('/playlist', jwtAuth, (req, res) => {
 
 // update a playlist
 router.put('/playlist/:id', jwtAuth, (req, res) => {
-
-}); // end router.put (update a playlist)
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and body id values mush match'
+    });
+  }
+  const updated = {};
+  const updateableFields = ['songs'];
+  if (field in req.body) {
+    updated[field] = req.body[field];
+  }
+});
+ // end router.put (update a playlist)
 
 // get a playlist
 router.get('/playlist/:id', jwtAuth, (req, res) => {
