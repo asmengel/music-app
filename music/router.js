@@ -17,6 +17,11 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
+
+router.use('*', (req, res) => {
+  res.status(404).json({message: 'not found'});
+});
+
 // search for songs
 router.get('/artist', (req, res) => {
   Artist
@@ -78,9 +83,14 @@ router.put('/artist/:id', (req, res) => {
 });
 
 
-router.delete('/artist', (req, res) => {
-
-})
+router.delete('/artist/:id', (req, res) => {
+  Artist
+  .findByIdAndRemove(req.params.id)
+  .then(() => {
+    console.log(`deleted artist data with id \`${req.params.ID}\``);
+    res.status(204).end();
+  });
+});
 
 // create a new playlist
 router.post('/playlist', jwtAuth, (req, res) => {
