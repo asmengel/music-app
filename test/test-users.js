@@ -11,14 +11,18 @@ const { app, runServer, closeServer } = require('../server');
 const { User } = require('../users');
 
 const expect = chai.expect;
-
 chai.use(chaiHttp);
 
+const faker = require('faker');
+
 describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
-  const username = 'exampleUser';
-  const password = 'examplePass';
-  const usernameB = 'exampleUserB';
-  const passwordB = 'examplePassB';
+
+  const fakeUser = {
+    username : faker.Name.userName(),
+    password : faker.internet.password(),
+    firstName : faker.Name.firstName(),
+    lastName : faker.Name.lastName()
+  };
 
   before(function () {
     return runServer(TEST_DATABASE_URL, TEST_PORT);
@@ -28,7 +32,13 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
     return closeServer();
   });
 
-  beforeEach(function () { });
+  beforeEach(function () {
+    const fakeUsers = [];
+    for (let i=0; i<10; i++){
+      fakeUsers.push(fakeUser);
+    }
+    return User.insertMany(fakeUsers);
+  });
 
   afterEach(function () {
     return User.remove({});
@@ -37,10 +47,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   describe('/api/users', function () {
     describe('POST', function () {
       it('Should reject users with missing username', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.username = '';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ password })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -57,10 +69,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with missing password', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.password = '';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -68,7 +82,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -77,10 +90,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-string username', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.username = 1234;
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username: 1234, password })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -88,7 +103,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -99,10 +113,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-string password', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.password = 1234;
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username, password: 1234 })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -110,7 +126,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -121,10 +136,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-trimmed username', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.username += ' untrimmed ';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username: ` ${username} `, password })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -143,10 +160,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-trimmed password', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.password += ' untrimmed ';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username, password: ` ${password} ` })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -165,10 +184,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with empty username', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.username += '';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username: '', password })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -176,7 +197,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -187,10 +207,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with password fewer than ten characters', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.password += 'abc';
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username, password: '123456789' })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -198,7 +220,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -209,10 +230,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with password greater than 72 characters', function () {
+        let fakeU = Object.assign({},fakeUser);
+        fakeU.password = new Array(73).fill('a').join('');
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username, password: new Array(73).fill('a').join('') })
+          .send( fakeU )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
           )
@@ -220,7 +243,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -231,13 +253,14 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with duplicate username', function () {
+        let fakeU = Object.assign({},fakeUser);
         // Create an initial user
-        return User.create({ username, password })
+        return User.create( fakeU )
           .then(() =>
             // Try to create a second user with the same username
             chai.request(app)
               .post('/api/users')
-              .send({ username, password })
+              .send( fakeU )
           )
           .then(() =>
             expect.fail(null, null, 'Request should not succeed')
@@ -246,7 +269,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -257,20 +279,21 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should create a new user', function () {
+        let fakeU = Object.assign({},fakeUser);
         return chai
           .request(app)
           .post('/api/users')
-          .send({ username, password })
+          .send( fakeU )
           .then(res => {
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.keys('username');
-            expect(res.body.username).to.equal(username);
-            return User.findOne({ username });
+            expect(res.body.username).to.equal(fakeU.username);
+            return User.findOne({ username: fakeU.username });
           })
           .then(user => {
             expect(user).to.not.be.null;
-            return user.validatePassword(password);
+            return user.validatePassword(fakeU.password);
           })
           .then(passwordIsCorrect => {
             expect(passwordIsCorrect).to.be.true;

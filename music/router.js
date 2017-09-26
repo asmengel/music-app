@@ -127,26 +127,26 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
   const updated = {};
   const updateableFields = ['songs'];
   updateableFields.forEach(field => {
-  if (field in req.body) {
-    updated[field] = req.body[field];
-  }
-});
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
   Playlist
-  .findByIdAndUpdate(req.params.id, {set: updated}, {new: true})
-  .then(updatedPlaylist => res.status(204).end())
-  .catch(err => res.status(500).json({message: 'something went wrong'}));
+    .findByIdAndUpdate(req.params.id, {set: updated}, {new: true})
+    .then(updatedPlaylist => res.status(204).end())
+    .catch(err => res.status(500).json({message: 'something went wrong'}));
   // updated.songs = ['xxx'] or [ 'xxx, 'yyy', 'zzz' ]
 });
- // end router.put (update a playlist)
+// end router.put (update a playlist)
 
 // get a playlist
 router.get('/playlist/:id', jwtAuth, (req, res) => {
   Playlist
-  .findById(req.params.id)
-  .then(post => res.json(post.apiRepr()))
-  .catch(err => {
-    res.status(500).json({error: 'something went horribly wrong'});
-  });
+    .findById(req.params.id)
+    .then(post => res.json(post.apiRepr()))
+    .catch(err => {
+      res.status(500).json({error: 'something went horribly wrong'});
+    });
   
 }); 
 // end router.get (update a playlist)
@@ -154,14 +154,14 @@ router.get('/playlist/:id', jwtAuth, (req, res) => {
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
   Playlist
-  .findByIdAndRemove(req.params.id)
-  .then (() => {
-    res.status(204).json({message: 'sucess yo'});
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(500).json({error: 'wrong on delete'});
-  });
+    .findByIdAndRemove(req.params.id)
+    .then (() => {
+      res.status(204).json({message: 'sucess yo'});
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'wrong on delete'});
+    });
 });
 // end router.delete (delete a playlist)
 
