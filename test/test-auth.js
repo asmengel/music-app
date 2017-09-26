@@ -99,7 +99,7 @@ describe('Auth endpoints', function () {
           const token = res.body.authToken;
           expect(token).to.be.a('string');
           const payload = jwt.verify(token, JWT_SECRET, {
-            // algorithm: ['HS256']
+            algorithm: ['HS256']
           });
           expect(payload.user).to.deep.equal({ username });
         });

@@ -14,7 +14,7 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe('/api/user', function () {
+describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   const username = 'exampleUser';
   const password = 'examplePass';
   const usernameB = 'exampleUserB';
