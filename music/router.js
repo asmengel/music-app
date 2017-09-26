@@ -114,7 +114,8 @@ router.post('/playlist', jwtAuth, (req, res) => {
       }
       res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-}); // end router.post (create a new playlist)
+}); 
+// end router.post (create a new playlist)
 
 // update a playlist
 router.put('/playlist/:id', jwtAuth, (req, res) => {
@@ -152,8 +153,17 @@ router.get('/playlist/:id', jwtAuth, (req, res) => {
 
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
-  
-}); // end router.delete (delete a playlist)
+  Playlist
+  .findByIdAndRemove(req.params.id)
+  .then (() => {
+    res.status(204).json({message: 'sucess yo'});
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'wrong on delete'});
+  });
+});
+// end router.delete (delete a playlist)
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
