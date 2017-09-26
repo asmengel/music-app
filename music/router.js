@@ -58,7 +58,29 @@ router.get('/artist', (req, res) => {
 //   });
 // });
 
+router.put('/artist/:id', (req, res) => {
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and body id values must match'
+    });
+  }
+  const updated = {};
+  const updateableFields = ['artist']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+  Artist
+  findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+  .then(updatedArtist => res.status(204).end())
+  .catch(err => res.status(500).json({message: 'something went wrong'}));
+});
 
+
+router.delete('/artist', (req, res) => {
+
+})
 
 // create a new playlist
 router.post('/playlist', jwtAuth, (req, res) => {
