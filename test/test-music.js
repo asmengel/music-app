@@ -1,7 +1,6 @@
 'use strict';
 
 const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
-//global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -76,7 +75,6 @@ describe('Protected endpoint', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
