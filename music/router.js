@@ -114,22 +114,56 @@ router.post('/playlist', jwtAuth, (req, res) => {
       }
       res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-}); // end router.post (create a new playlist)
+}); 
+// end router.post (create a new playlist)
 
 // update a playlist
 router.put('/playlist/:id', jwtAuth, (req, res) => {
-
-}); // end router.put (update a playlist)
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and body id values mush match'
+    });
+  }
+  const updated = {};
+  const updateableFields = ['songs'];
+  updateableFields.forEach(field => {
+  if (field in req.body) {
+    updated[field] = req.body[field];
+  }
+});
+  Playlist
+  .findByIdAndUpdate(req.params.id, {set: updated}, {new: true})
+  .then(updatedPlaylist => res.status(204).end())
+  .catch(err => res.status(500).json({message: 'something went wrong'}));
+  // updated.songs = ['xxx'] or [ 'xxx, 'yyy', 'zzz' ]
+});
+ // end router.put (update a playlist)
 
 // get a playlist
 router.get('/playlist/:id', jwtAuth, (req, res) => {
+  Playlist
+  .findById(req.params.id)
+  .then(post => res.json(post.apiRepr()))
+  .catch(err => {
+    res.status(500).json({error: 'something went horribly wrong'});
+  });
   
-}); // end router.get (update a playlist)
+}); 
+// end router.get (update a playlist)
 
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
-  
-}); // end router.delete (delete a playlist)
+  Playlist
+  .findByIdAndRemove(req.params.id)
+  .then (() => {
+    res.status(204).json({message: 'sucess yo'});
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'wrong on delete'});
+  });
+});
+// end router.delete (delete a playlist)
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
