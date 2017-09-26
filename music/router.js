@@ -4,7 +4,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Artist , Playlist } = require('./models');
+const { Artist, Playlist } = require('./models');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
@@ -18,9 +18,28 @@ const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // search for songs
-router.get('/', (req, res) => {
+router.get('/artist', (req, res) => {
+  Artist
+    .find()
+    .limit(20)
+    .then(artistList => {
+      res.json({
+        artistList: artistList.map(
+          (artistList) => artistList.apiRepr())
+      });
+    })
+    .catch(
+    err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+});
   // check for optional query parameters
-}); // end router.get (search for songs)
+//}); // end router.get (search for songs)
+
+router.post('/artist', (req, res) => {
+  
+})
 
 // create a new playlist
 router.post('/playlist', jwtAuth, (req, res) => {
@@ -65,7 +84,7 @@ router.post('/playlist', jwtAuth, (req, res) => {
   }
 
   const sizedFields = {
-    playlistName: { min: 1 , max: 72 }
+    playlistName: { min: 1, max: 72 }
   };
   const tooSmallField = Object.keys(sizedFields).find(field =>
     'min' in sizedFields[field] &&
@@ -114,7 +133,7 @@ router.post('/playlist', jwtAuth, (req, res) => {
       }
       res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-}); 
+});
 // end router.post (create a new playlist)
 
 // update a playlist
@@ -127,47 +146,47 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
   const updated = {};
   const updateableFields = ['songs'];
   updateableFields.forEach(field => {
-  if (field in req.body) {
-    updated[field] = req.body[field];
-  }
-});
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
   Playlist
-  .findByIdAndUpdate(req.params.id, {set: updated}, {new: true})
-  .then(updatedPlaylist => res.status(204).end())
-  .catch(err => res.status(500).json({message: 'something went wrong'}));
+    .findByIdAndUpdate(req.params.id, { set: updated }, { new: true })
+    .then(updatedPlaylist => res.status(204).end())
+    .catch(err => res.status(500).json({ message: 'something went wrong' }));
   // updated.songs = ['xxx'] or [ 'xxx, 'yyy', 'zzz' ]
 });
- // end router.put (update a playlist)
+// end router.put (update a playlist)
 
 // get a playlist
 router.get('/playlist/:id', jwtAuth, (req, res) => {
   Playlist
-  .findById(req.params.id)
-  .then(post => res.json(post.apiRepr()))
-  .catch(err => {
-    res.status(500).json({error: 'something went horribly wrong'});
-  });
-  
-}); 
+    .findById(req.params.id)
+    .then(post => res.json(post.apiRepr()))
+    .catch(err => {
+      res.status(500).json({ error: 'something went horribly wrong' });
+    });
+
+});
 // end router.get (update a playlist)
 
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
   Playlist
-  .findByIdAndRemove(req.params.id)
-  .then (() => {
-    res.status(204).json({message: 'sucess yo'});
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(500).json({error: 'wrong on delete'});
-  });
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      res.status(204).json({ message: 'sucess yo' });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'wrong on delete' });
+    });
 });
 // end router.delete (delete a playlist)
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
-  // check for required query parameters
+// check for required query parameters
 }); // end router.put (vot on a song)
 
 module.exports = { router };
