@@ -1,0 +1,11 @@
+language: node_js
+node_js: node
+services:
+- mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: GsKejXRkMJxiSk67DE1bcUdVbmJnDltLq6GNhVheZixewkGEATt5voj8MkesuBe86scR4fDBbpJdT279gTPkNS4u7fYMMN5nXzSZVMAX5Cm5o3S1uN/kZ0auctO04ZPDcu4GXJaNmKLWwLUURNJIzskN2nqFyX9xAAe+x5OzHu+7BFxlPpUDucCvfczSfWcGu2/IlWWpPfhgBHJqy+nusgefLLDLNc0B0rMSc32Vh9uj6AMNCdy5N2Z2KBLNDQavcLpuKYwu0POwQOjn5nVLwOXd4AZXvtM3wawCKMrXv4bZoGMozHT63RxE5VzNybpZAs5/plfX+AXUekXmsVVdikkNCkdiA0ZPkLKE8mP5rDtn7fe5VQjq61+yLW4ng7iQi8CPLOrgaAgjcNlIF0XRHQkNy0Y3bfSPu6Qoe/ol2H5RSCFR1zFLPCOzk1du+303ERTKjc2h9jgI/R5P1lkM9nwBOyQjg0e/XPrVrfokPD3UeRB7X6PdnkExLC/nS81+VG1UsmN0+/jH0HiA6AKqfwEyTsF3fjoKxSSQmeMq/apjZmKrjMUMruN6jim3ZsrwYztpXYoPC4RU2kGGdtbDxU/iwR33mqo28MUbD330cTgXiXPm2grdjMUbGG+nfzpBKBzjhNXqxQ4TCOfRAp4pTspFgwAUJzbW+pMQvEojvqc=
+  app: vast-island-54766
+  on:
+    repo: bradcgarner/music-app

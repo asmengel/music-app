@@ -1,7 +1,6 @@
 'use strict';
 
 const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
-//global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -18,6 +17,8 @@ chai.use(chaiHttp);
 describe('Auth endpoints', function () {
   const username = 'exampleUser';
   const password = 'examplePass';
+  const firstName = 'Joe';
+  const lastName = 'Schmoe';
 
   before(function () {
     return runServer(TEST_DATABASE_URL, TEST_PORT);
@@ -29,7 +30,7 @@ describe('Auth endpoints', function () {
 
   beforeEach(function () {
     return User.hashPassword(password).then(password =>
-      User.create({ username, password })
+      User.create({ username, password, firstName, lastName })
     );
   });
 
@@ -83,7 +84,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
@@ -99,9 +99,9 @@ describe('Auth endpoints', function () {
           const token = res.body.authToken;
           expect(token).to.be.a('string');
           const payload = jwt.verify(token, JWT_SECRET, {
-            // algorithm: ['HS256']
+            algorithm: ['HS256']
           });
-          expect(payload.user).to.deep.equal({ username });
+          expect(payload.user).to.deep.equal({ username, firstName, lastName });
         });
     });
   });
@@ -118,7 +118,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
@@ -144,7 +143,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });

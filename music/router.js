@@ -201,9 +201,11 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
     }
   });
   Playlist
+
     .findByIdAndUpdate(req.params.id, { set: updated }, { new: true })
     .then(updatedPlaylist => res.status(204).end())
     .catch(err => res.status(500).json({ message: 'something went wrong' }));
+
   // updated.songs = ['xxx'] or [ 'xxx, 'yyy', 'zzz' ]
 });
 // end router.put (update a playlist)
@@ -218,6 +220,7 @@ router.get('/playlist/:id', jwtAuth, (req, res) => {
     });
 
 });
+
 // end router.get (update a playlist)
 
 // delete a playlist
@@ -230,6 +233,7 @@ router.delete('/playlist/:id', jwtAuth, (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'wrong on delete' });
+
     });
 });
 // end router.delete (delete a playlist)

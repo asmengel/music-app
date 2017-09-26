@@ -1,7 +1,6 @@
 'use strict';
 
 const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
-//global.DATABASE_URL = 'mongodb://localhost/jwt-auth-demo-test';
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -37,7 +36,7 @@ describe('Protected endpoint', function () {
     return User.remove({});
   });
 
-  describe('/api/protected', function () {
+  describe.skip('/api/music', function () {
     it('Should reject requests with no credentials', function () {
       return chai
         .request(app)
@@ -67,7 +66,7 @@ describe('Protected endpoint', function () {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/music')
         .set('Authorization', `Bearer ${token}`)
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
@@ -76,7 +75,6 @@ describe('Protected endpoint', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
@@ -96,7 +94,7 @@ describe('Protected endpoint', function () {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/music')
         .set('authorization', `Bearer ${token}`)
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
@@ -125,7 +123,7 @@ describe('Protected endpoint', function () {
 
       return chai
         .request(app)
-        .get('/api/protected')
+        .get('/api/music')
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(200);
