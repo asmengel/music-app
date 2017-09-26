@@ -4,7 +4,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { Artist , Playlist } = require('./models');
+const { Artist, Playlist } = require('./models');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
@@ -17,10 +17,79 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
+
+
+
 // search for songs
-router.get('/', (req, res) => {
+router.get('/artist', (req, res) => {
+  Artist
+    .find()
+    .limit(20)
+    .then(artistList => {
+      res.json({
+        artistList: artistList.map(
+          (artistList) => artistList.apiRepr())
+      });
+    })
+    .catch(
+    err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+});
   // check for optional query parameters
-}); // end router.get (search for songs)
+//}); // end router.get (search for songs)
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
+router.post('/artist', (req, res) => {
+  const requiredFields = ['albums[0]', 'albums.songs.title'];
+  console.log(requiredFields);
+  for(let i=0; i<requiredFields.lenght; i++) {
+    const field = requiredFields[i];
+    if(!(field in req.body)) {
+      const message = `missing \`${field}\` in request body`
+      console.error(message);
+      return res.status(400).send(message);
+    }
+  }
+  Playlist
+  .create({
+    // figure out how to access data and go from there.
+  })
+  .then(playlist => res.status(201).json(playlist.apiRepr()))
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'Something went wrong'});
+  });
+});
+
+router.put('/artist/:id', (req, res) => {
+  if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
+    res.status(400).json({
+      error: 'Request path id and body id values must match'
+    });
+  }
+  const updated = {};
+  const updateableFields = ['artist']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  updateableFields.forEach(field => {
+    if (field in req.body) {
+      updated[field] = req.body[field];
+    }
+  });
+  Artist
+  findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+  .then(updatedArtist => res.status(204).end())
+  .catch(err => res.status(500).json({message: 'something went wrong'}));
+});
+
+
+router.delete('/artist/:id', (req, res) => {
+  Artist
+  .findByIdAndRemove(req.params.id)
+  .then(() => {
+    console.log(`deleted artist data with id \`${req.params.ID}\``);
+    res.status(204).end();
+  });
+});
 
 // create a new playlist
 router.post('/playlist', jwtAuth, (req, res) => {
@@ -65,7 +134,7 @@ router.post('/playlist', jwtAuth, (req, res) => {
   }
 
   const sizedFields = {
-    playlistName: { min: 1 , max: 72 }
+    playlistName: { min: 1, max: 72 }
   };
   const tooSmallField = Object.keys(sizedFields).find(field =>
     'min' in sizedFields[field] &&
@@ -114,7 +183,7 @@ router.post('/playlist', jwtAuth, (req, res) => {
       }
       res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-}); 
+});
 // end router.post (create a new playlist)
 
 // update a playlist
@@ -132,9 +201,11 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
     }
   });
   Playlist
-    .findByIdAndUpdate(req.params.id, {set: updated}, {new: true})
+
+    .findByIdAndUpdate(req.params.id, { set: updated }, { new: true })
     .then(updatedPlaylist => res.status(204).end())
-    .catch(err => res.status(500).json({message: 'something went wrong'}));
+    .catch(err => res.status(500).json({ message: 'something went wrong' }));
+
   // updated.songs = ['xxx'] or [ 'xxx, 'yyy', 'zzz' ]
 });
 // end router.put (update a playlist)
@@ -145,29 +216,36 @@ router.get('/playlist/:id', jwtAuth, (req, res) => {
     .findById(req.params.id)
     .then(post => res.json(post.apiRepr()))
     .catch(err => {
-      res.status(500).json({error: 'something went horribly wrong'});
+      res.status(500).json({ error: 'something went horribly wrong' });
     });
-  
-}); 
+
+});
+
 // end router.get (update a playlist)
 
 // delete a playlist
 router.delete('/playlist/:id', jwtAuth, (req, res) => {
   Playlist
     .findByIdAndRemove(req.params.id)
-    .then (() => {
-      res.status(204).json({message: 'sucess yo'});
+    .then(() => {
+      res.status(204).json({ message: 'sucess yo' });
     })
     .catch(err => {
       console.error(err);
-      res.status(500).json({error: 'wrong on delete'});
+      res.status(500).json({ error: 'wrong on delete' });
+
     });
 });
 // end router.delete (delete a playlist)
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
-  // check for required query parameters
+// check for required query parameters
 }); // end router.put (vot on a song)
 
+
+
+// router.use('*', (req, res) => {
+//   res.status(404).json({message: 'cannot be found not found'});
+// });
 module.exports = { router };
