@@ -18,6 +18,8 @@ chai.use(chaiHttp);
 describe('Auth endpoints', function () {
   const username = 'exampleUser';
   const password = 'examplePass';
+  const firstName = 'Joe';
+  const lastName = 'Schmoe';
 
   before(function () {
     return runServer(TEST_DATABASE_URL, TEST_PORT);
@@ -29,7 +31,7 @@ describe('Auth endpoints', function () {
 
   beforeEach(function () {
     return User.hashPassword(password).then(password =>
-      User.create({ username, password })
+      User.create({ username, password, firstName, lastName })
     );
   });
 
@@ -83,7 +85,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
@@ -101,7 +102,7 @@ describe('Auth endpoints', function () {
           const payload = jwt.verify(token, JWT_SECRET, {
             algorithm: ['HS256']
           });
-          expect(payload.user).to.deep.equal({ username });
+          expect(payload.user).to.deep.equal({ username, firstName, lastName });
         });
     });
   });
@@ -118,7 +119,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
@@ -144,7 +144,6 @@ describe('Auth endpoints', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
