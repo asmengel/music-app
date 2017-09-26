@@ -1,40 +1,40 @@
 'use strict';
 
 const express = require('express');
+const app = express();
+
+const { router: usersRouter } = require('./users');
+const { router: musicRouter } = require('./music');
+const { router: authRouter, basicStrategy, jwtStrategy } = require('./auth');
+const { PORT, DATABASE_URL } = require('./config');
+
 const cors = require('cors');
+app.use(cors());
+
 const morgan = require('morgan');
+app.use(morgan('common', { skip: () => process.env.NODE_ENV === 'test' }));
+
 const path = require('path');
-const passport = require('passport');
+
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const { router: usersRouter } = require('./users');
-const { router: authRouter, basicStrategy, jwtStrategy } = require('./auth');
-const { PORT, DATABASE_URL } = require('./config');
+// needed here? Or just in routers?
+const passport = require('passport');
 const jwtAuth = passport.authenticate('jwt', { session: false });
-
-const app = express();
-
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
 
-app.use(morgan('common', { skip: () => process.env.NODE_ENV === 'test' }));
-app.use(cors());
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
-
-app.get('/api/protected', jwtAuth, (req, res) => {
-  return res.json({ data: 'rosebud' });
-});
-
+app.use('/api/music/', musicRouter);
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
 });
 
 let server;
+
 function runServer(url = DATABASE_URL, port = PORT) {
   return new Promise((resolve, reject) => {
     mongoose.connect(url, { useMongoClient: true }, err => {

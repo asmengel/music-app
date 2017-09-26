@@ -1,20 +1,33 @@
 'use strict';
-// endpoint is /api/users/
+// endpoint is /api/music/
 
 const express = require('express');
 const router = express.Router();
 
-const { User } = require('./models');
+const { Artist , Playlist } = require('./models');
 
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 router.use(jsonParser);
 
-router.post('/', jsonParser, (req, res) => {
-  const requiredFields = ['username', 'password'];
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+// search for songs
+router.get('/', (req, res) => {
+  // check for optional query parameters
+}); // end router.get (search for songs)
+
+// create a new playlist
+router.post('/playlist', jwtAuth, (req, res) => {
+  const requiredFields = ['playlistName'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
-  if (missingField) {  
+  if (missingField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -23,12 +36,12 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ['username', 'password'];
+  const stringFields = ['playlistName'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
   );
 
-  if (nonStringField) {    
+  if (nonStringField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -37,12 +50,12 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const explicityTrimmedFields = ['username', 'password'];
+  const explicityTrimmedFields = ['playlistName'];
   const nonTrimmedField = explicityTrimmedFields.find(
     field => req.body[field].trim() !== req.body[field]
   );
 
-  if (nonTrimmedField) {    
+  if (nonTrimmedField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -52,8 +65,7 @@ router.post('/', jsonParser, (req, res) => {
   }
 
   const sizedFields = {
-    username: { min: 1 },
-    password: { min: 10, max: 72 }
+    playlistName: { min: 1 , max: 72 }
   };
   const tooSmallField = Object.keys(sizedFields).find(field =>
     'min' in sizedFields[field] &&
@@ -64,7 +76,7 @@ router.post('/', jsonParser, (req, res) => {
     req.body[field].trim().length > sizedFields[field].max
   );
 
-  if (tooSmallField || tooLargeField) {    
+  if (tooSmallField || tooLargeField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -75,33 +87,53 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  let { username, password , lastName, firstName } = req.body;
+  let { playlistName } = req.body;
 
-  return User.find({ username })
+  return Playlist.find({ playlistName })
     .count()
-    .then(count => {      
-      if (count > 0) {        
+    .then(count => {
+      if (count > 0) {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
-          location: 'username'
+          message: 'Playlist name already taken',
+          location: 'playlistName'
         });
       }
-      return User.hashPassword(password);
+      return ''; // we don't need this
     })
-    .then(hash => {      
-      return User.create({ username, password: hash, lastName, firstName });
+    .then(playlist => {
+      return Playlist.create({ playlistName });
     })
-    .then(user => {      
-      return res.status(201).json(user.apiRepr());
+    .then(playlist => {
+      return res.status(201).json(playlist.apiRepr());
     })
-    .catch(err => {      
+    .catch(err => {
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
       res.status(500).json({ code: 500, message: 'Internal server error' });
     });
-});
+}); // end router.post (create a new playlist)
+
+// update a playlist
+router.put('/playlist/:id', jwtAuth, (req, res) => {
+
+}); // end router.put (update a playlist)
+
+// get a playlist
+router.get('/playlist/:id', jwtAuth, (req, res) => {
+  
+}); // end router.get (update a playlist)
+
+// delete a playlist
+router.delete('/playlist/:id', jwtAuth, (req, res) => {
+  
+}); // end router.delete (delete a playlist)
+
+// vote on a song
+router.put('/vote/:id', jwtAuth, (req, res) => {
+  // check for required query parameters
+}); // end router.put (vot on a song)
 
 module.exports = { router };

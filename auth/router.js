@@ -1,11 +1,13 @@
 'use strict';
+// endpoint: /api/auth/
 
 const express = require('express');
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
+const router = express.Router();
+
 const config = require('../config');
 
-const router = express.Router();
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 const createAuthToken = function(user) {
   return jwt.sign({ user }, config.JWT_SECRET, {
