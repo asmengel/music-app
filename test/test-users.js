@@ -17,12 +17,15 @@ const faker = require('faker');
 
 describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
 
-  const fakeUser = {
-    username : faker.Name.userName(),
-    password : faker.internet.password(),
-    firstName : faker.Name.firstName(),
-    lastName : faker.Name.lastName()
-  };
+  function fakeUser() {
+    return {
+      username : faker.internet.userName(),
+      password : faker.internet.password(),
+      firstName : faker.name.firstName(),
+      lastName : faker.name.lastName()
+    };
+  }
+  //console.log(fakeUser());
 
   before(function () {
     return runServer(TEST_DATABASE_URL, TEST_PORT);
@@ -35,19 +38,21 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   beforeEach(function () {
     const fakeUsers = [];
     for (let i=0; i<10; i++){
-      fakeUsers.push(fakeUser);
+      fakeUsers.push(fakeUser());
+      //console.log('fakeUsers ', fakeUsers);
     }
     return User.insertMany(fakeUsers);
   });
 
   afterEach(function () {
-    return User.remove({});
+    console.log('after each');
+    //return User.remove({});
   });
 
   describe('/api/users', function () {
     describe('POST', function () {
       it('Should reject users with missing username', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.username = '';
         return chai
           .request(app)
@@ -60,7 +65,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -69,7 +73,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with missing password', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.password = '';
         return chai
           .request(app)
@@ -90,7 +94,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-string username', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.username = 1234;
         return chai
           .request(app)
@@ -113,7 +117,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-string password', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.password = 1234;
         return chai
           .request(app)
@@ -136,7 +140,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-trimmed username', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.username += ' untrimmed ';
         return chai
           .request(app)
@@ -160,7 +164,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with non-trimmed password', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.password += ' untrimmed ';
         return chai
           .request(app)
@@ -184,7 +188,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with empty username', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.username += '';
         return chai
           .request(app)
@@ -207,7 +211,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with password fewer than ten characters', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.password += 'abc';
         return chai
           .request(app)
@@ -230,7 +234,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with password greater than 72 characters', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         fakeU.password = new Array(73).fill('a').join('');
         return chai
           .request(app)
@@ -253,7 +257,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should reject users with duplicate username', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         // Create an initial user
         return User.create( fakeU )
           .then(() =>
@@ -279,7 +283,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it('Should create a new user', function () {
-        let fakeU = Object.assign({},fakeUser);
+        let fakeU = fakeUser();
         return chai
           .request(app)
           .post('/api/users')
