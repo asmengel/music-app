@@ -21,7 +21,7 @@ mongoose.Promise = global.Promise;
 
 // needed here? Or just in routers?
 const passport = require('passport');
-const jwtAuth = passport.authenticate('jwt', { session: false });
+// const jwtAuth = passport.authenticate('jwt', { session: false }); // don't need this in server.js
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
 
