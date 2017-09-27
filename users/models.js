@@ -29,7 +29,8 @@ UserSchema.methods.apiRepr = function () {
   return { 
     firstName: this.firstName,
     lastName: this.lastName,
-    username: this.username };
+    username: this.username,
+    id: this._id };
 };
 
 UserSchema.methods.validatePassword = function (password) {

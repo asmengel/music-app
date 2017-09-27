@@ -37,7 +37,7 @@ const PlaylistSchema = mongoose.Schema({
     title: {type: String},
     id: {type: String},
   }], // end songs
-  ownerId: {type: String}
+  user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'} // this says 'I'll contain an id, use that as a foreign key to refernce the primary key of User (which is users)
 });
 
 PlaylistSchema.methods.apiRepr = function () {
