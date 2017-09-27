@@ -16,13 +16,14 @@ const ArtistSchema = mongoose.Schema({
       votes: {type: Number, default: 0}
     }] // end songs
   }], // end albums
-  //genres: [{type: String}]
+  genres: [{type: String}]
 });
 
 ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
     genres: this.genres,
+    albums: this.albums,
     _id: this.id };
 };
 
