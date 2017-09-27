@@ -29,10 +29,6 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
     return runServer(TEST_DATABASE_URL, TEST_PORT);
   });
 
-  after(function () {
-    return closeServer();
-  });
-
   beforeEach(function () {
     User.remove({});
     const fakeUsers = [];
@@ -44,6 +40,10 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
 
   afterEach(function () {
     //console.log('after each');
+  });
+
+  after(function () {
+    return closeServer();
   });
 
   describe('/api/users', function () {
@@ -299,6 +299,12 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           .then(passwordIsCorrect => {
             expect(passwordIsCorrect).to.be.true;
           });
+      });
+      it.skip('Should not allow users to be deleted', function() {
+// DO THIS!!!!!!!!!!!!!!
+      });
+      it.skip('Should update a user', function() {
+// DO THIS!!!!!!!!!!!!!!
       });
     });
   });

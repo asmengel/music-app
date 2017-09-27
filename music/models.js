@@ -23,8 +23,10 @@ ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
     genres: this.genres,
+
     albums: this.albums,
     _id: this.id };
+
 };
 
 const Artist = mongoose.models.Artist || mongoose.model('Artist', ArtistSchema);
@@ -37,13 +39,17 @@ const PlaylistSchema = mongoose.Schema({
     title: {type: String},
     id: {type: String},
   }], // end songs
+  user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'} // this says 'I'll contain an id, use that as a foreign key to refernce the primary key of User (which is users)
 });
 
 PlaylistSchema.methods.apiRepr = function () {
   return { 
     playlistName: this.playlistName,
-    songs: this.songs.length(),
-    _id: this.id };
+    songs: this.songs.length(), // later this can be ref
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    id: this._id
+  };
+
 };
 
 const Playlist = mongoose.models.Playlist || mongoose.model('Playlist', PlaylistSchema);
