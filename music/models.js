@@ -16,13 +16,14 @@ const ArtistSchema = mongoose.Schema({
       votes: {type: Number, default: 0}
     }] // end songs
   }], // end albums
-  genres: [{type: String}]
+  //genres: [{type: String}]
 });
 
 ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
-    genres: this.genres };
+    genres: this.genres,
+    _id: this.id };
 };
 
 const Artist = mongoose.models.Artist || mongoose.model('Artist', ArtistSchema);
@@ -40,7 +41,8 @@ const PlaylistSchema = mongoose.Schema({
 PlaylistSchema.methods.apiRepr = function () {
   return { 
     playlistName: this.playlistName,
-    songs: this.songs.length() };
+    songs: this.songs.length(),
+    _id: this.id };
 };
 
 const Playlist = mongoose.models.Playlist || mongoose.model('Playlist', PlaylistSchema);

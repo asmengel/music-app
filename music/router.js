@@ -41,18 +41,21 @@ router.get('/artist', (req, res) => {
 //}); // end router.get (search for songs)
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
 router.post('/artist', (req, res) => {
-  const requiredFields = ['artistName','albums[0].title', 'albums[0].songs[0].title'];
-  console.log(requiredFields);
-  for(let i=0; i<requiredFields.lenght; i++) {
+  const requiredFields = ['artistName'];
+  for(let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
+    console.log(req.body);
+    // this checks tier 1 of each object(artist)
     if(!(field in req.body)) {
       const message = `missing \`${field}\` in request body`
       console.error(message);
       return res.status(400).send(message);
     }
+    
   }
   Artist
   .create({
+    artistName: req.body.artistName
     // figure out how to access data and go from there.
   })
   .then(playlist => res.status(201).json(playlist.apiRepr()))
