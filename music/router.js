@@ -41,7 +41,7 @@ router.get('/artist', (req, res) => {
 //}); // end router.get (search for songs)
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
 router.post('/artist', (req, res) => {
-  const requiredFields = ['albums[0]', 'albums.songs.title'];
+  const requiredFields = ['artistName','albums[0].title', 'albums[0].songs[0].title'];
   console.log(requiredFields);
   for(let i=0; i<requiredFields.lenght; i++) {
     const field = requiredFields[i];
@@ -51,7 +51,7 @@ router.post('/artist', (req, res) => {
       return res.status(400).send(message);
     }
   }
-  Playlist
+  Artist
   .create({
     // figure out how to access data and go from there.
   })
@@ -69,7 +69,7 @@ router.put('/artist/:id', (req, res) => {
     });
   }
   const updated = {};
-  const updateableFields = ['artist']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  const updateableFields = ['artistName', 'albums[0].title', 'albums[0].songs[0].title']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
