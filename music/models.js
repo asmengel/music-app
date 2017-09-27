@@ -22,7 +22,9 @@ const ArtistSchema = mongoose.Schema({
 ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
-    genres: this.genres };
+    genres: this.genres ,
+    id: this._id
+  };
 };
 
 const Artist = mongoose.models.Artist || mongoose.model('Artist', ArtistSchema);

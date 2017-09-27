@@ -11,60 +11,137 @@ const { User } = require('../users');
 const { JWT_SECRET } = require('../config');
 
 const expect = chai.expect;
-
 chai.use(chaiHttp);
 
-describe('Protected endpoint', function () {
-  const username = 'exampleUser';
-  const password = 'examplePass';
+const faker = require('faker');
+
+function fakeSongList() {
+  return [
+    { title: faker.company.bs()},
+    { title: faker.commerce.color()},
+    { title: faker.commerce.productAdjective()},
+    { title: faker.address.city()},
+    { title: faker.commerce.department()},
+    { title: faker.company.catchPhraseNoun()},
+    { title: faker.company.catchPhraseDescriptor()},
+    { title: faker.hacker.verb() + '#' + faker.finance.amount()},
+    { title: faker.company.bs()}
+  ]
+}
+
+function fakeAlbumList() {
+  return [
+    { title: faker.commerce.color(),
+      songs: fakeSongList()
+    },
+    { title: faker.commerce.productAdjective(),
+      songs: fakeSongList()
+    },
+    { title: faker.commerce.department(),
+      songs: fakeSongList()
+    },
+    { title: faker.company.catchPhraseDescriptor(),      songs: fakeSongList()
+    },
+  ]
+}
+
+function fakeGenres() {
+  let arrayofGenres = [ // we have 20
+    'Hip Hop', 'Folk', 'Classical', 'Heavy Metal', 'Punk', 'New Wave', 'Pop', 'Reggae', 'Rap', 'Country', 'Bluegrass', 'R&B', 'Motown Revival', 'Doo Wop', 'Disco', 
+    'Crunk', 'Trap', 'Jazz', 'Electronica', 'Soul'
+  ];
+  let randomNumber = Math.floor(Math.random() * 10); // 0 - 10
+  return [ 
+    arrayofGenres[randomNumber], 
+    arrayofGenres[randomNumber + 2],
+    arrayofGenres[randomNumber + 3], 
+    arrayofGenres[randomNumber + 10]
+  ];
+}
+
+function fakePlaylist() {
+  return {
+    playlistName : faker.company.bsAdjective(),
+    songs : fakeSongList()
+  };
+}
+
+function fakeArtist() {
+  return {
+    artistName : faker.company.companyName(),
+    albums : fakeAlbumList(),
+    genres : fakeGenres()
+  };
+}
+
+describe('Music endpoints', function () {
+  const username = 'exampleUzer';
+  const password = 'examplePazz';
+  const firstName = 'Jozie';
+  const lastName = 'Schmozie';
 
   before(function () {
     return runServer(TEST_DATABASE_URL, TEST_PORT);
   });
 
-  after(function () {
-    return closeServer();
-  });
-
   beforeEach(function () {
+    User.remove({});
     return User.hashPassword(password).then(password =>
       User.create({ username, password })
     );
   });
 
   afterEach(function () {
-    return User.remove({});
+    //console.log('after each'); 
   });
 
- // get api/music/artist
- // 20 artists (no more than)
- // res is json object
- // each artist match artistList.apiRepr()
- // if fail 500
+  after(function () {
+    return closeServer();
+  });
 
-// post api/music/artist
-// currently broken
+  // get api/music/artist
+  // 20 artists (no more than)
+  // res is json object
+  // each artist match artistList.apiRepr()
+  // if fail 500
 
-// put api/music/artist/:id
-// broken (post also broken)
+  // post api/music/artist
+  // currently broken
 
-// delete api/music/artist/:id
+  // put api/music/artist/:id
+  // broken (post also broken)
 
-// post /api/music/playlist
-// working
+  // delete api/music/artist/:id
 
-// put /api/music/playlist/:id
-// working
+  // post /api/music/playlist
+  // working
 
+  // put /api/music/playlist/:id
+  let id = 'GET A PLAYLIST ID'
 
-
-
-
-  describe.skip('/api/music', function () {
-    it('Should reject requests with no credentials', function () {
+  describe('/api/music/playlist/:id', function () {
+    it.skip('Should update a playlist', function () {
+      let fakeU = fakeUser();
+      // Create an initial user
+      return User.create( fakeU )
+        .then(() =>
+          // Try to create a second user with the same username
+          chai.request(app)
+            .post('/api/users')
       return chai
         .request(app)
-        .get('/api/protected')
+        .put(`/api/music/playlist/${id}`)
+        .then(res =>
+          expect.res.to.have
+      )
+
+
+
+  describe('/api/music', function () {
+    it.skip('Should reject requests with no credentials', function () {
+      return chai
+        .request(app)
+        .get('/api/music')
         .then(() =>
           expect.fail(null, null, 'Request should not succeed')
         )
@@ -72,13 +149,12 @@ describe('Protected endpoint', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
     });
 
-    it('Should reject requests with an invalid token', function () {
+    it.skip('Should reject requests with an invalid token', function () {
       const token = jwt.sign(
         { username },
         'wrongSecret',
@@ -103,7 +179,7 @@ describe('Protected endpoint', function () {
           expect(res).to.have.status(401);
         });
     });
-    it('Should reject requests with an expired token', function () {
+    it.skip('Should reject requests with an expired token', function () {
       const token = jwt.sign(
         {
           user: { username },
@@ -127,12 +203,11 @@ describe('Protected endpoint', function () {
           if (err instanceof chai.AssertionError) {
             throw err;
           }
-
           const res = err.response;
           expect(res).to.have.status(401);
         });
     });
-    it('Should send protected data', function () {
+    it.skip('Should send protected data', function () {
       const token = jwt.sign(
         {
           user: { username }
