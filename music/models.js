@@ -22,7 +22,7 @@ const ArtistSchema = mongoose.Schema({
 ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
-    genres: this.genres ,
+    genres: this.genres,
     id: this._id
   };
 };
@@ -37,12 +37,16 @@ const PlaylistSchema = mongoose.Schema({
     title: {type: String},
     id: {type: String},
   }], // end songs
+  ownerId: {type: String}
 });
 
 PlaylistSchema.methods.apiRepr = function () {
   return { 
     playlistName: this.playlistName,
-    songs: this.songs.length() };
+    songs: this.songs.length(), 
+    owner: this.ownerId,
+    id: this._id
+  };
 };
 
 const Playlist = mongoose.models.Playlist || mongoose.model('Playlist', PlaylistSchema);

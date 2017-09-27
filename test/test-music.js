@@ -59,6 +59,14 @@ function fakeGenres() {
   ];
 }
 
+function fakeArtist() {
+  return {
+    artistName : faker.company.companyName(),
+    albums : fakeAlbumList(),
+    genres : fakeGenres()
+  };
+}
+
 function fakePlaylist() {
   return {
     playlistName : faker.company.bsAdjective(),
@@ -66,11 +74,12 @@ function fakePlaylist() {
   };
 }
 
-function fakeArtist() {
+function fakeUser() {
   return {
-    artistName : faker.company.companyName(),
-    albums : fakeAlbumList(),
-    genres : fakeGenres()
+    username : faker.internet.userName(),
+    password : faker.internet.password(),
+    firstName : faker.name.firstName(),
+    lastName : faker.name.lastName()
   };
 }
 
@@ -85,10 +94,27 @@ describe('Music endpoints', function () {
   });
 
   beforeEach(function () {
+    Artist.remove({});
+    Playlist.remove({});
     User.remove({});
-    return User.hashPassword(password).then(password =>
-      User.create({ username, password })
-    );
+
+    const fakeArtists = [];
+    for (let i=0; i<10; i++){
+      fakeArtists.push(fakeArtist());
+    }
+    Artist.insertMany(fakeUsers);
+
+    const fakeUsers = [];
+    for (let i=0; i<10; i++){
+      fakeUsers.push(fakeUser());
+    }
+    return User.insertMany(fakeUsers);
+
+    const fakePlaylists = [];
+    for (let i=0; i<10; i++){
+      fakePlaylists.push(fakePlaylist());
+    }
+  
   });
 
   afterEach(function () {
