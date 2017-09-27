@@ -23,8 +23,10 @@ ArtistSchema.methods.apiRepr = function () {
   return { 
     artistName: this.artistName,
     genres: this.genres,
-    id: this._id
-  };
+
+    albums: this.albums,
+    _id: this.id };
+
 };
 
 const Artist = mongoose.models.Artist || mongoose.model('Artist', ArtistSchema);
@@ -43,10 +45,11 @@ const PlaylistSchema = mongoose.Schema({
 PlaylistSchema.methods.apiRepr = function () {
   return { 
     playlistName: this.playlistName,
-    songs: this.songs.length(), 
-    owner: this.ownerId,
+    songs: this.songs.length(), // later this can be ref
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     id: this._id
   };
+
 };
 
 const Playlist = mongoose.models.Playlist || mongoose.model('Playlist', PlaylistSchema);
