@@ -310,7 +310,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
           });
       });
       it.only('Should not allow users to be deleted', function() {
-        return User.findOne()
+         return User.findOne()
           .then(res => {
             console.log(res);
             expect(res).to.be.an('object');
