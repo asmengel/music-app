@@ -127,15 +127,16 @@ return runServer()
   })
   .then(()=>{
     let songsPerUser = Math.floor(songCt/userCt);
-    let rotations = Math.floor(songCt/songsPerUser);
+    let rotations = Math.floor(songCt/songsPerUser) - 3;
 
     for (let i=0; i<userCt; i++){
       fakePlaylists.push(fakePlaylist());
+      console.log(i);
       fakePlaylists[i].user = userIds[i]; // each user gets 1 playlist
       let songIndices = [];
       for (let skip = 0;skip<songsPerUser;skip++)
-        songIndices.push(i+(skip*rotations));
-      fakePlaylists[i].songs = fakeSongIds.filter(id=>songIndices=id); // each user gets 1 playlist
+        fakePlaylists[i].songs.push(fakeSongIds[i+(skip*rotations)].id);
+      // console.log(songIndices);
     }
     return fakePlaylists;
   })

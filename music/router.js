@@ -218,10 +218,27 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
 // end router.put (update a playlist)
 
 // get a playlist
-router.get('/playlist/:id', jwtAuth, (req, res) => {
+router.get('/playlist/:id', (req, res) => {
   Playlist
     .findById(req.params.id)
+    // .populate({path: 'user', select: 'username'})
+    // .populate({path: 'user', select: 'username'})
     .then(post => res.json(post.apiRepr()))
+    .catch(err => {
+      res.status(500).json({ error: 'something went horribly wrong' });
+    });
+
+});
+
+router.get('/playlist', (req, res) => {
+  Playlist
+    .findOne()
+    // .populate({path: 'user', select: 'username'})
+    // .populate({path: 'user', select: 'username'})
+    .then(playlist => {
+      console.log('playlist',playlist);
+      res.json(playlist.apiRepr());
+    })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
     });
@@ -247,7 +264,7 @@ router.delete('/playlist/:id', jwtAuth, (req, res) => {
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
-  
+
 // check for required query parameters
 }); // end router.put (vot on a song)
 
