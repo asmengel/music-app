@@ -36,7 +36,6 @@ const Artist = mongoose.models.Artist || mongoose.model('Artist', ArtistSchema);
 const PlaylistSchema = mongoose.Schema({
   playlistName: { type: String, required: true },
   songs: [{
-    title: {type: String},
     id: {type: String},
   }], // end songs
   user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'} // this says 'I'll contain an id, use that as a foreign key to refernce the primary key of User (which is users)

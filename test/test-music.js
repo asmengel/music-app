@@ -81,7 +81,7 @@ function fakePlaylist() {
   return {
     playlistName : faker.company.bsAdjective(),
     user: 'testUser',    
-    songs : fakeSongList() // edit this so songs have real IDs
+    songs : []
   };
 }
 
@@ -101,49 +101,61 @@ describe('Music endpoints', function () {
     let fakeSongIds = [];
     let userIds = [];
     const fakePlaylists = []; // create join collection
+    const userCt = 10;
+    let songCt;
     
     Artist.remove({}) // clear all 3 tables
-      .then(() => {
+      .then(() => { 
         return User.remove({});
       }) 
-      .then(() => {
+      .then(() => {        
         return Playlist.remove({});
       }) 
-      .then(() => {
+      .then(() => {        
         for (let i=0; i<10; i++){
           fakeArtists.push(fakeArtist());
         }
+        return fakeArtists;        
       })
       .then(() => {
         return Artist.insertMany(fakeArtists);
       })
-      .then((artists) => {
-        let temp = artists.forEach((artist)=> {
-          artist.albums.forEach((album)=>{
-            album.songs.reduce((song)=> {
-              fakeSongIds.concat(song._id);
+      .then(artists => {
+        artists.forEach(artist=> {
+          artist.albums.forEach(album=>{
+            let songArray = album.songs.map(song=> {
+              return song._id;
             });
+            fakeSongIds = fakeSongIds.concat(songArray);
+            songCt = fakeSongIds.length;      
           });
         });
-        console.log('fakeSongIds',fakeSongIds);
-        for (let i=0; i<10; i++){
+        return fakeSongIds;
+      })
+      .then(()=>{
+        for (let i=0; i<userCt; i++){
           fakeUsers.push(fakeUser());
         }
         return User.insertMany(fakeUsers);
       })
       .then(users => {
-        // console.log('users found ', users);
-        userIds = users.map(user => {
-          // console.log('iddddd ', user._id);
+        return userIds = users.map(user => {
           return user._id;
         });
-        // console.log('uid1 ',userIds[0]);
-        // console.log('fu1 ',fakeUsers);
-        for (let i=0; i<10; i++){
+      })
+      .then(()=>{
+        let songsPerUser = Math.floor(songCt/userCt);
+        let rotations = Math.floor(songCt/songsPerUser);
+    
+        for (let i=0; i<userCt; i++){
           fakePlaylists.push(fakePlaylist());
-          fakePlaylists[i].user = userIds[i]._id;
+          fakePlaylists[i].user = userIds[i]; // each user gets 1 playlist
+          let songIndices = [];
+          for (let skip = 0;skip<songsPerUser;skip++)
+            songIndices.push(i+(skip*rotations));
+          fakePlaylists[i].songs = fakeSongIds.filter(id=>songIndices=id); // each user gets 1 playlist
         }
-        //console.log('fpk ',fakePlaylists);
+        return fakePlaylists;
       })
       .then(() => {
         return Playlist.insertMany(fakePlaylists);
@@ -151,7 +163,7 @@ describe('Music endpoints', function () {
   });
 
   afterEach(function () {
-    //console.log('after each'); 
+
   });
 
   after(function () {

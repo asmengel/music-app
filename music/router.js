@@ -247,6 +247,7 @@ router.delete('/playlist/:id', jwtAuth, (req, res) => {
 
 // vote on a song
 router.put('/vote/:id', jwtAuth, (req, res) => {
+  
 // check for required query parameters
 }); // end router.put (vot on a song)
 

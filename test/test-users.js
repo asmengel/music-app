@@ -336,7 +336,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             );
           });
       });
-      it.skip('Should update a user', function() {
+      it('Should update a user', function() {
         let originalUser = {};
         User.findOne()
           .then(res => {
@@ -358,7 +358,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
                 lastName: user.lastName + 222
               })
               .then(res => {
-                expect(res).to.have.status(201);
+                expect(res).to.have.status(204);
                 expect(res.body).to.be.an('object');
                 expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
                 expect(res.body.username).to.equal(originalUser.username + 222);                expect(res.body.firstName).to.equal(originalUser.firstName + 222);               expect(res.body.lasName).to.equal(originalUser.lastName + 222);
