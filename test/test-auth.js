@@ -101,7 +101,7 @@ describe('Auth endpoints', function () {
           const payload = jwt.verify(token, JWT_SECRET, {
             algorithm: ['HS256']
           });
-          console.log('payload.user',payload.user);
+          //console.log('payload.user',payload.user);
           expect(payload.user.username).to.equal( username );
           expect(payload.user.firstName).to.equal( firstName );          
           expect(payload.user.lastName).to.equal( lastName );

@@ -47,6 +47,7 @@ PlaylistSchema.methods.apiRepr = function () {
     playlistName: this.playlistName,
     songs: this.songs.length(), // later this can be ref
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    album: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     id: this._id
   };
 

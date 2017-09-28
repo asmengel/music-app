@@ -30,12 +30,14 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
   });
 
   beforeEach(function () {
-    User.remove({});
     const fakeUsers = [];
-    for (let i=0; i<10; i++){
-      fakeUsers.push(fakeUser());
-    }
-    return User.insertMany(fakeUsers);
+    User.remove({})
+      .then(()=>{
+        for (let i=0; i<10; i++){
+          fakeUsers.push(fakeUser());
+        }
+        return User.insertMany(fakeUsers);
+      });
   });
 
   afterEach(function () {
@@ -255,17 +257,16 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       });
       it('Should reject users with duplicate username', function () {
         let fakeU = fakeUser();
-        // Create an initial user
         return User.create( fakeU )
-          .then(() =>
-            // Try to create a second user with the same username
-            chai.request(app)
+          .then(() => {
+            // Try to create a 2nd user with same username
+            return chai.request(app)
               .post('/api/users')
-              .send( fakeU )
-          )
-          .then(() =>
-            expect.fail(null, null, 'Request should not succeed')
-          )
+              .send( fakeU );
+          })
+          .then(() => {
+            expect.fail(null, null, 'Request should not succeed');
+          })
           .catch(err => {
             if (err instanceof chai.AssertionError) {
               throw err;
@@ -282,7 +283,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
       it('Should create a new user', function () {
         let fakeU = fakeUser();
         return chai
-          .request(app)
+          .request(app)          
           .post('/api/users')
           .send( fakeU )
           .then(res => {
@@ -290,6 +291,9 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body).to.be.an('object');
             expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
             expect(res.body.username).to.equal(fakeU.username);
+          })
+          // WE GET AN UNHANDLED PROMISE REJECTION WARNING HERE
+          .then(() => {
             return User.findOne({ username: fakeU.username });
           })
           .then(user => {
@@ -298,13 +302,79 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           })
           .then(passwordIsCorrect => {
             expect(passwordIsCorrect).to.be.true;
+          })
+          .catch(err => {
+            if (err instanceof chai.AssertionError) {
+              throw err;
+            }
           });
       });
-      it.skip('Should not allow users to be deleted', function() {
-// DO THIS!!!!!!!!!!!!!!
+      it('Should not allow users to be deleted', function() {
+        User.findOne()
+          .then(res => {
+            expect(res).to.have.status(201);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
+            return res._id;
+          })
+          .then(userId => {
+            return chai
+              .request(app)
+              .delete(`/api/users/${userId}`);
+          })
+          .then(() => {
+            expect.fail(null, null, 'Request should not succeed');
+          })
+          .catch(err => {
+            if (err instanceof chai.AssertionError) {
+              throw err;
+            }
+            const res = err.response;
+            expect(res).to.have.status(404);
+            expect(res.body.message).to.equal(
+              'Not Found'
+            );
+          });
       });
       it.skip('Should update a user', function() {
-// DO THIS!!!!!!!!!!!!!!
+        let originalUser = {};
+        User.findOne()
+          .then(res => {
+            expect(res).to.have.status(201);
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
+            originalUser = res.body;
+            return originalUser;
+          })
+          .then(user => {
+            let newPassword = User.hashPassword(faker.internet.password());
+            return chai
+              .request(app)
+              .put(`/api/users/${user._id}`)
+              .send({
+                username: user.username + 222,
+                password: newPassword,
+                firstName: user.firstName + 222,
+                lastName: user.lastName + 222
+              })
+              .then(res => {
+                expect(res).to.have.status(201);
+                expect(res.body).to.be.an('object');
+                expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
+                expect(res.body.username).to.equal(originalUser.username + 222);                expect(res.body.firstName).to.equal(originalUser.firstName + 222);               expect(res.body.lasName).to.equal(originalUser.lastName + 222);
+                expect(res.body.password).to.equal(newPassword);
+              });
+          })
+          .catch(err => {
+            if (err instanceof chai.AssertionError) {
+              throw err;
+            }
+            const res = err.response;
+            expect(res).to.have.status(404);
+            expect(res.body.message).to.equal(
+              'Not Found'
+            );
+          });
       });
     });
   });
