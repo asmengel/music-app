@@ -65,7 +65,7 @@ function validateUserFields(user) {
     };
   }
 
-  return {valid: true};
+  return { valid: true };
 }
 
 function confirmUniqueUsername (username) {
@@ -76,7 +76,7 @@ function confirmUniqueUsername (username) {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
-          message: 'Username already taken',
+          message: 'Username already takken',
           location: 'username'
         });
       } else {
@@ -99,59 +99,67 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  const stringFields = ['username', 'password', 'firstName', 'lastName'];
-  const nonStringField = stringFields.find(
-    field => field in req.body && typeof req.body[field] !== 'string'
-  );
-
-  if (nonStringField) {    
-    return res.status(422).json({
-      code: 422,
-      reason: 'ValidationError',
-      message: 'Incorrect field type: expected string',
-      location: nonStringField
-    });
+  let userValid = {};  
+  if (validateUserFields(req.body).valid === true) {
+    userValid = req.body;
+  } else {
+    let code = validateUserFields(req.body).code || 422;
+    return res.status(code).json(validateUserFields(req.body));
   }
 
-  const explicityTrimmedFields = ['username', 'password'];
-  const nonTrimmedField = explicityTrimmedFields.find(
-    field => req.body[field].trim() !== req.body[field]
-  );
+  // const stringFields = ['username', 'password', 'firstName', 'lastName'];
+  // const nonStringField = stringFields.find(
+  //   field => field in req.body && typeof req.body[field] !== 'string'
+  // );
 
-  if (nonTrimmedField) {    
-    return res.status(422).json({
-      code: 422,
-      reason: 'ValidationError',
-      message: 'Cannot start or end with whitespace',
-      location: nonTrimmedField
-    });
-  }
+  // if (nonStringField) {    
+  //   return res.status(422).json({
+  //     code: 422,
+  //     reason: 'ValidationError',
+  //     message: 'Incorrect field type: expected string',
+  //     location: nonStringField
+  //   });
+  // }
 
-  const sizedFields = {
-    username: { min: 1 },
-    password: { min: 10, max: 72 }
-  };
-  const tooSmallField = Object.keys(sizedFields).find(field =>
-    'min' in sizedFields[field] &&
-    req.body[field].trim().length < sizedFields[field].min
-  );
-  const tooLargeField = Object.keys(sizedFields).find(field =>
-    'max' in sizedFields[field] &&
-    req.body[field].trim().length > sizedFields[field].max
-  );
+  // const explicityTrimmedFields = ['username', 'password'];
+  // const nonTrimmedField = explicityTrimmedFields.find(
+  //   field => req.body[field].trim() !== req.body[field]
+  // );
 
-  if (tooSmallField || tooLargeField) {    
-    return res.status(422).json({
-      code: 422,
-      reason: 'ValidationError',
-      message: tooSmallField
-        ? `Must be at least ${sizedFields[tooSmallField].min} characters long`
-        : `Must be at most ${sizedFields[tooLargeField].max} characters long`,
-      location: tooSmallField || tooLargeField
-    });
-  }
+  // if (nonTrimmedField) {    
+  //   return res.status(422).json({
+  //     code: 422,
+  //     reason: 'ValidationError',
+  //     message: 'Cannot start or end with whitespace',
+  //     location: nonTrimmedField
+  //   });
+  // }
 
-  let { username, password , lastName, firstName } = req.body;
+  // const sizedFields = {
+  //   username: { min: 1 },
+  //   password: { min: 10, max: 72 }
+  // };
+  // const tooSmallField = Object.keys(sizedFields).find(field =>
+  //   'min' in sizedFields[field] &&
+  //   req.body[field].trim().length < sizedFields[field].min
+  // );
+  // const tooLargeField = Object.keys(sizedFields).find(field =>
+  //   'max' in sizedFields[field] &&
+  //   req.body[field].trim().length > sizedFields[field].max
+  // );
+
+  // if (tooSmallField || tooLargeField) {    
+  //   return res.status(422).json({
+  //     code: 422,
+  //     reason: 'ValidationError',
+  //     message: tooSmallField
+  //       ? `Must be at least ${sizedFields[tooSmallField].min} characters long`
+  //       : `Must be at most ${sizedFields[tooLargeField].max} characters long`,
+  //     location: tooSmallField || tooLargeField
+  //   });
+  // }
+
+  let { username, password , lastName, firstName } = userValid;
 
   return User.find({ username })
     .count()
@@ -184,11 +192,11 @@ router.post('/', jsonParser, (req, res) => {
 router.put('/:id', jsonParser, (req, res) => {
 
   let userValid = {};  
-  if (!(validateUserFields(req.body) !== {valid: true})) {
+  if (validateUserFields(req.body).valid === true) {
+    userValid = req.body;
+  } else {
     let code = validateUserFields(req.body).code;
     return res.status(code).json(validateUserFields(req.body));
-  } else {
-    userValid = req.body;
   }
 
   return confirmUniqueUsername(userValid.username)

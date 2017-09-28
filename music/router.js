@@ -236,8 +236,8 @@ router.get('/playlist', (req, res) => {
     // .populate({path: 'user', select: 'username'})
     // .populate({path: 'user', select: 'username'})
     .then(playlist => {
-      console.log('playlist',playlist);
-      res.json(playlist.apiRepr());
+      //console.log('playlist',playlist);
+      return res.json(playlist.apiRepr());
     })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
