@@ -323,21 +323,24 @@ router.delete('/playlists/:id', jwtAuth, (req, res) => {
 router.put('/artists/:artistId/albums/:albumId/songs/:songId', jwtAuth, (req, res) => {
   let {artistId , albumId, songId} = req.params;
   return Artist
-    .findOne(
-      { 'albums._id': albumId } , { 'albums.$': 1} // $ is var for index
-    )
+    .findById( artistId )
     .then(artist=>{
-      console.log('art',artist);
-      artist.albums[0].songs.forEach(song=>{
-        console.log('medhurst sings',song);
-        console.log((song._id === songId));
-        console.log(song._id , songId);
-        if (song._id.toString() === songId) { 
-          console.log('ROI!');
-          song.votes = song.votes + 1 ;
+    // TOTALLY HORRIFIC !!!!!!!!!!!!!!!!!!!!!!
+      artist.albums.forEach(album=>{
+        if(album._id.toString()===albumId) {
+          album.songs.forEach(song=>{
+            console.log('medhurst sings',song);
+            console.log((song._id === songId));
+            console.log(song._id , songId);
+            if (song._id.toString() === songId) { 
+              console.log('ROI!');
+              song.votes = song.votes + 1 ;
+            }
+          });
         }
       });
-      return artist.save();
+      // CHANGE THIS MESS ^^^^^^^^^^^^^^^^^
+      return artist.save();      
     })
     .then(() => {
       res.status(204).json({ message: 'you upvoted'});
