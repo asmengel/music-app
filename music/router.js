@@ -18,7 +18,6 @@ const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 function artistIsValid(artist) {
-  console.log('in fn ', artist);
   let validArtist = {};
   if(artist.artistName && typeof artist.artistName === "string"){
     validArtist = Object.assign({}, artist);
@@ -27,8 +26,43 @@ function artistIsValid(artist) {
   return validArtist;
 }
 
-
+// @@@@@@@@@@@@ IMPROVE: SHOW ONLY SONGS @@@@@@@@@@
 // search for songs
+router.get('/songs', (req, res) => {
+  Artist
+    .find( { 'albums.songs.title' : req.query.song})
+    .limit(20)
+    .then(artistList => {
+      res.json({
+        artistList: artistList.map(
+          (artistList) => artistList.apiRepr())
+      });
+    })
+    .catch(
+      err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+});
+
+// @@@@@@@@@@@@ IMPROVE: SHOW ONLY ALBUMS @@@@@@@@@@
+// search for albums
+router.get('/albums', (req, res) => {
+  Artist
+    .find( { 'albums.title' : req.query.album})
+    .limit(20)
+    .then(artistList => {
+      res.json({
+        artistList: artistList.map(
+          (artistList) => artistList.apiRepr())
+      });
+    })
+    .catch(
+      err => {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+});
 
 /////////////////////////////////////////////// should add artist by id for future
 router.get('/artist', (req, res) => {
@@ -42,14 +76,12 @@ router.get('/artist', (req, res) => {
       });
     })
     .catch(
-    err => {
+      err => {
       console.error(err);
       res.status(500).json({ message: 'Internal server error' });
     });
 });
-  // check for optional query parameters
-//}); // end router.get (search for songs)
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
 router.post('/artist', (req, res) => {
   console.log('aiv ', artistIsValid(req.body));
   // assume we get 1 artist
@@ -66,7 +98,6 @@ router.post('/artist', (req, res) => {
   } else {
     res.status(500).json({error: 'Something went wrong'});
   }
-  
 });
 
 router.put('/artist/:id', (req, res) => {
@@ -82,12 +113,25 @@ router.put('/artist/:id', (req, res) => {
       updated[field] = req.body[field];
     }
   });
-  Artist
-  findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+  return Artist
+  .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
   .then(updatedArtist => res.status(204).end())
   .catch(err => res.status(500).json({message: 'something went wrong'}));
 });
 
+router.get('/artist/:id', (req, res) => {
+  Artist
+  .findById(req.params.id)
+  .then(artist => {
+    console.log(artist);    
+    console.log(req.params.id);
+    return res.status(204).send(artist);
+  })
+  .catch(err => {
+    console.log('err',err);
+    return res.status(500).json({message: 'something went wrong'});
+  });
+});
 
 router.delete('/artist/:id', (req, res) => {
   Artist
@@ -217,31 +261,42 @@ router.put('/playlist/:id', jwtAuth, (req, res) => {
 });
 // end router.put (update a playlist)
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
 // get a playlist
 router.get('/playlist/:id', (req, res) => {
   Playlist
     .findById(req.params.id)
     // .populate({path: 'user', select: 'username'})
     // .populate({path: 'user', select: 'username'})
-    .then(post => res.json(post.apiRepr()))
+    .then(playlist => {
+      console.log(playlist);
+      res.status(201).json(playlist);
+      // res.json(playlist.apiRepr());
+    })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
     });
 
 });
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
 router.get('/playlist', (req, res) => {
   Playlist
     .findOne()
     // .populate({path: 'user', select: 'username'})
     // .populate({path: 'user', select: 'username'})
-    .then(playlist => {
-      //console.log('playlist',playlist);
-      return res.json(playlist.apiRepr());
-    })
-    .catch(err => {
-      res.status(500).json({ error: 'something went horribly wrong' });
+    .then((res)=>{
+      console.log(res);
     });
+    // .then(playlist => {
+    //   //console.log('playlist',playlist);
+    //   return res.json(playlist.apiRepr());
+    // })
+    // .catch(err => {
+    //   res.status(500).json({ error: 'something went horribly wrong' });
+    // });
 
 });
 
