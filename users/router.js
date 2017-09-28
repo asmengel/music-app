@@ -9,6 +9,10 @@ const { User } = require('./models');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 router.use(jsonParser);
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
 
 // function expects req.body to be passed in
 // checks 4 essential fields for new users and updates
@@ -137,7 +141,7 @@ router.post('/', jsonParser, (req, res) => {
 });
 
 // update a user
-router.put('/:id', jsonParser, (req, res) => {
+router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 
   let userValid = {};  
   if (validateUserFields(req.body).valid === true) {
