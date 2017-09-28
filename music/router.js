@@ -318,7 +318,18 @@ router.delete('/playlist/:id', jwtAuth, (req, res) => {
 // end router.delete (delete a playlist)
 
 // vote on a song
-router.put('/vote/:id', jwtAuth, (req, res) => {
+router.put('/vote/:id', (req, res) => {
+  Artist
+  findByIdAndUpdate(req.body.album.$.votes)
+  .then(() => {
+    res.status(204).json({ message: 'you upvoted'});
+  })
+  .catch(err => {
+    console.error(err);
+    res.status(500).json({error: 'wrong on vote update'});
+  });
+  // find content to vote on
+  // 
 
 // check for required query parameters
 }); // end router.put (vot on a song)
