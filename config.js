@@ -4,7 +4,7 @@ require('dotenv').config(); // this is unconditional, which will require heroku 
 
 exports.DATABASE_URL =
     process.env.DATABASE_URL ||
-    //global.DATABASE_URL ||
+    global.DATABASE_URL ||
     'mongodb://localhost/music-app';
 exports.TEST_DATABASE_URL =
     process.env.TEST_DATABASE_URL ||

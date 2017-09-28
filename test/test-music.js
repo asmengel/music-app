@@ -141,6 +141,22 @@ describe('Music endpoints', function () {
       .then(() => {
         return Playlist.insertMany(fakePlaylists);
       });
+<<<<<<< HEAD
+=======
+
+      console.log('uid1 ',userIds);
+      console.log('fu1 ',fakeUsers);
+      
+    const fakePlaylists = []; // create join collection
+    for (let i=0; i<10; i++){
+      fakePlaylists.push(fakePlaylist());
+      fakePlaylists[i].user = userIds[i];
+    }
+    console.log('fpk ',fakePlaylists);
+
+    return Playlist.insertMany(fakePlaylists);
+  
+>>>>>>> 5329a4416db271ffcfbc5156692b04076b11e804
   });
 
   afterEach(function () {

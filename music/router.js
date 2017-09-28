@@ -17,10 +17,20 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-
+function artistIsValid(artist) {
+  console.log('in fn ', artist);
+  let validArtist = {};
+  if(artist.artistName && typeof artist.artistName === "string"){
+    validArtist = Object.assign({}, artist);
+  }
+  // check to see if artist is valid
+  return validArtist;
+}
 
 
 // search for songs
+
+/////////////////////////////////////////////// should add artist by id for future
 router.get('/artist', (req, res) => {
   Artist
     .find()
@@ -41,25 +51,22 @@ router.get('/artist', (req, res) => {
 //}); // end router.get (search for songs)
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
 router.post('/artist', (req, res) => {
-  const requiredFields = ['albums[0]', 'albums.songs.title'];
-  console.log(requiredFields);
-  for(let i=0; i<requiredFields.lenght; i++) {
-    const field = requiredFields[i];
-    if(!(field in req.body)) {
-      const message = `missing \`${field}\` in request body`
-      console.error(message);
-      return res.status(400).send(message);
-    }
-  }
-  Playlist
-  .create({
-    // figure out how to access data and go from there.
-  })
-  .then(playlist => res.status(201).json(playlist.apiRepr()))
-  .catch(err => {
-    console.error(err);
+  console.log('aiv ', artistIsValid(req.body));
+  // assume we get 1 artist
+  if ( artistIsValid(req.body) ) {
+    let validArtist = artistIsValid(req.body);
+    console.log('in va', validArtist);
+    Artist
+    .create(validArtist)
+    .then(playlist => res.status(201).json(playlist.apiRepr()))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'Something went wrong'});
+    });
+  } else {
     res.status(500).json({error: 'Something went wrong'});
-  });
+  }
+  
 });
 
 router.put('/artist/:id', (req, res) => {
@@ -69,7 +76,7 @@ router.put('/artist/:id', (req, res) => {
     });
   }
   const updated = {};
-  const updateableFields = ['artist']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  const updateableFields = ['artistName', 'albums']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
