@@ -33,16 +33,16 @@ router.get('/songs', (req, res) => {
     .find( { 'albums.songs.title' : req.query.song})
     .limit(20)
     .then(artistList => {
-      res.json({
-        artistList: artistList.map(
+      res.json(
+        artistList.map(
           (artistList) => artistList.apiRepr())
-      });
+      );
     })
     .catch(
       err => {
-      console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
-    });
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      });
 });
 
 // @@@@@@@@@@@@ IMPROVE: SHOW ONLY ALBUMS @@@@@@@@@@
@@ -59,9 +59,9 @@ router.get('/albums', (req, res) => {
     })
     .catch(
       err => {
-      console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
-    });
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      });
 });
 
 /////////////////////////////////////////////// should add artist by id for future
@@ -77,9 +77,9 @@ router.get('/artists', (req, res) => {
     })
     .catch(
       err => {
-      console.error(err);
-      res.status(500).json({ message: 'Internal server error' });
-    });
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      });
 });
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
 router.post('/artists', jwtAuth, (req, res) => {
@@ -89,12 +89,12 @@ router.post('/artists', jwtAuth, (req, res) => {
     let validArtist = artistIsValid(req.body);
     console.log('in va', validArtist);
     Artist
-    .create(validArtist)
-    .then(playlist => res.status(201).json(playlist.apiRepr()))
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({error: 'Something went wrong'});
-    });
+      .create(validArtist)
+      .then(playlist => res.status(201).json(playlist.apiRepr()))
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({error: 'Something went wrong'});
+      });
   } else {
     res.status(500).json({error: 'Something went wrong'});
   }
@@ -114,32 +114,37 @@ router.put('/artists/:id', jwtAuth, (req, res) => {
     }
   });
   return Artist
-  .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
-  .then(updatedArtist => res.status(204).end())
-  .catch(err => res.status(500).json({message: 'something went wrong'}));
+    .findByIdAndUpdate(req.params.id, {$set: updated}, {new: true})
+    .then(updatedArtist => res.status(204).end())
+    .catch(err => res.status(500).json({message: 'something went wrong'}));
 });
 
 router.get('/artists/:id', (req, res) => {
   Artist
-  .findById(req.params.id)
-  .then(artist => {
-    console.log(artist);    
-    console.log(req.params.id);
-    return res.status(204).send(artist);
-  })
-  .catch(err => {
-    console.log('err',err);
-    return res.status(500).json({message: 'something went wrong'});
-  });
+    .findById(req.params.id)
+    .then(artist => {
+      console.log('get artist by id',artist);    
+      console.log(req.params.id);
+      console.log('apiRepr',artist.apiRepr());
+      return res.status(200).json(artist.apiRepr()); // <<<<<<< NOT RETURNING DATA !!!!!!!!!!!!!
+    })
+    .catch(err => {
+      console.log('err',err);
+      return res.status(500).json({message: 'something went wrong'});
+    });
 });
 
 router.delete('/artists/:id', jwtAuth, (req, res) => {
   Artist
-  .findByIdAndRemove(req.params.id)
-  .then(() => {
-    console.log(`deleted artist data with id \`${req.params.ID}\``);
-    res.status(204).end();
-  });
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      console.log(`deleted artist data with id \`${req.params.ID}\``);
+      res.status(204).end();
+    })
+    .catch(err => {
+      console.log('err',err);
+      return res.status(500).json({message: 'something went wrong'});
+    });
 });
 
 // add JWT
@@ -227,8 +232,10 @@ router.post('/playlists', jwtAuth, (req, res) => {
       return Playlist.create({ playlistName });
     })
     .then(playlist => {
-      // APIREPR NOT WORKING !!!!!!!!!!
-      return res.status(201).json(playlist);
+      let playlistRepr = playlist.map(playlist=>{
+        return playlist.apiRepr();
+      });
+      return res.json(playlistRepr());
     })
     .catch(err => {
       if (err.reason === 'ValidationError') {
@@ -262,34 +269,34 @@ router.put('/playlists/:id', jwtAuth, (req, res) => {
 });
 // end router.put (update a playlist)
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
 // get a playlist
 router.get('/playlists/:id', jwtAuth, (req, res) => {
   Playlist
     .findById(req.params.id)
     // .populate({path: 'user', select: 'username'})
-    // .populate({path: 'user', select: 'username'})
     .then(playlist => {
-      console.log(playlist);
-      res.status(201).json(playlist);
-       //res.json(playlist.apiRepr());
+
+      return res.status(201).json(playlist.apiRepr());
+
     })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
     });
-
 });
 
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
-router.get('/playlists/user/:id', jwtAuth, (req, res) => {
+
+router.get('/playlists/users/:id', jwtAuth, (req, res) => {
+
+
   Playlist
     .find({'user': req.params.id})
     // .populate({path: 'user', select: 'username'})
     .then(playlist => {
       console.log('playlist',playlist);
-      return res.json(playlist);
+      let playlistRepr = playlist.map(playlist=>{
+        return playlist.apiRepr();
+      });
+      return res.json(playlistRepr());
     })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
@@ -307,7 +314,6 @@ router.delete('/playlists/:id', jwtAuth, (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: 'wrong on delete' });
-
     });
 });
 // end router.delete (delete a playlist)
@@ -317,6 +323,7 @@ router.delete('/playlists/:id', jwtAuth, (req, res) => {
 router.put('/votes/:id', jwtAuth, (req, res) => {
   Artist
   .findByIdAndUpdate(req.body.album.$.votes)
+
   .then(() => {
     res.status(204).json({ message: 'you upvoted'});
   })
@@ -324,6 +331,7 @@ router.put('/votes/:id', jwtAuth, (req, res) => {
     console.error(err);
     res.status(500).json({error: 'wrong on vote update'});
   });
+
   // find content to vote on
   // 
 
