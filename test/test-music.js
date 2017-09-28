@@ -279,7 +279,8 @@ describe('Music endpoints', function () {
           expect(res).to.have.status(401);
         });
     });
-    it.skip('Should send protected data', function () {
+    it.skip('Should send protected data', function () { ////// functional but returning internal server error. works in postman just fine
+      let testData = " ";
       const token = jwt.sign(
         {
           user: { username }
@@ -291,16 +292,20 @@ describe('Music endpoints', function () {
           expiresIn: '7d'
         }
       );
-
-      return chai
+      return Playlist
+      .findOne()
+      .then((playlist) => {
+        return testData = playlist.id
+      })
+      .then(() => {
+        return chai
         .request(app)
-        .get('/api/music/playlists/id') // needs to be a variable id.
+        .get(`/api/music/playlists/${testData}`)
         .set('authorization', `Bearer ${token}`)
-        .then(res => {
-          expect(res).to.have.status(200);
-          // expect(res.body).to.be.an('object');
-          // expect(res.body.data).to.equal('rosebud');
+        .then(response => {
+          expect(response).to.have.status(200);
         });
-    });
+      })
+      });
   });
 });

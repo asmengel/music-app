@@ -276,7 +276,7 @@ router.get('/playlists/:id', jwtAuth, (req, res) => {
     // .populate({path: 'user', select: 'username'})
     .then(playlist => {
 
-      return res.status(201).json(playlist.apiRepr());
+      return res.status(200).json(playlist.apiRepr());
 
     })
     .catch(err => {
