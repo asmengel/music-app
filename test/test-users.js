@@ -288,7 +288,7 @@ describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
           .then(res => {
             expect(res).to.have.status(201);
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.all.keys('username', 'firstName', 'lastName');
+            expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
             expect(res.body.username).to.equal(fakeU.username);
             return User.findOne({ username: fakeU.username });
           })

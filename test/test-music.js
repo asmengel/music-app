@@ -96,40 +96,51 @@ describe('Music endpoints', function () {
   });
 
   beforeEach(function () {
-    Artist.remove({}); // clear all 3 tables
-    Playlist.remove({});
-    User.remove({});
-
     const fakeArtists = []; // create fake artists and users (two main collections)
-    for (let i=0; i<10; i++){
-      fakeArtists.push(fakeArtist());
-    }
-    Artist.insertMany(fakeArtists);
-
-    const fakeUsers = [];
-    for (let i=0; i<10; i++){
-      fakeUsers.push(fakeUser());
-    }
-
+    const fakeUsers = [];    
     let userIds = [];
-    User.insertMany(fakeUsers)
+    const fakePlaylists = []; // create join collection
+    
+    Artist.remove({}) // clear all 3 tables
+      .then(() => {
+        User.remove({});
+      }) 
+      .then(() => {
+        Playlist.remove({});
+      }) 
+      .then(() => {
+        for (let i=0; i<10; i++){
+          fakeArtists.push(fakeArtist());
+        }
+      })
+      .then(() => {
+        Artist.insertMany(fakeArtists);
+      })
+      .then(() => {
+        for (let i=0; i<10; i++){
+          fakeUsers.push(fakeUser());
+        }
+      })
+      .then(() => {
+        return User.insertMany(fakeUsers);
+      })
       .then(users => {
         console.log('users found ', users);
-        userIds = users.map(user => user._id);
+        userIds = users.map(user => {
+          console.log('iddddd ', user._id);
+          return user._id;
+        });
+        console.log('uid1 ',userIds[0]);
+        // console.log('fu1 ',fakeUsers);
+        for (let i=0; i<10; i++){
+          fakePlaylists.push(fakePlaylist());
+          fakePlaylists[i].user = userIds[i]._id;
+        }
+        //console.log('fpk ',fakePlaylists);
+      })
+      .then(() => {
+        return Playlist.insertMany(fakePlaylists);
       });
-
-      console.log('uid1 ',userIds);
-      console.log('fu1 ',fakeUsers);
-      
-    const fakePlaylists = []; // create join collection
-    for (let i=0; i<10; i++){
-      fakePlaylists.push(fakePlaylist());
-      fakePlaylists[i].user = userIds[i]._id;
-    }
-    console.log('fpk ',fakePlaylists);
-
-    return Playlist.insertMany(fakePlaylists);
-  
   });
 
   afterEach(function () {
