@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 
 const faker = require('faker');
 
-describe('/api/user', function () { // BE SURE TO ADD firstName and lastName
+describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
 
   function fakeUser() {
     return {

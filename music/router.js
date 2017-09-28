@@ -65,7 +65,7 @@ router.get('/albums', (req, res) => {
 });
 
 /////////////////////////////////////////////// should add artist by id for future
-router.get('/artist', (req, res) => {
+router.get('/artists', (req, res) => {
   Artist
     .find()
     .limit(20)
@@ -82,7 +82,7 @@ router.get('/artist', (req, res) => {
     });
 });
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&TEST ME LATER&&&&&&&&&&&&&&&&&&&&&&
-router.post('/artist', (req, res) => {
+router.post('/artists', (req, res) => {
   console.log('aiv ', artistIsValid(req.body));
   // assume we get 1 artist
   if ( artistIsValid(req.body) ) {
@@ -100,7 +100,7 @@ router.post('/artist', (req, res) => {
   }
 });
 
-router.put('/artist/:id', (req, res) => {
+router.put('/artists/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and body id values must match'
@@ -119,7 +119,7 @@ router.put('/artist/:id', (req, res) => {
   .catch(err => res.status(500).json({message: 'something went wrong'}));
 });
 
-router.get('/artist/:id', (req, res) => {
+router.get('/artists/:id', (req, res) => {
   Artist
   .findById(req.params.id)
   .then(artist => {
@@ -133,7 +133,7 @@ router.get('/artist/:id', (req, res) => {
   });
 });
 
-router.delete('/artist/:id', (req, res) => {
+router.delete('/artists/:id', (req, res) => {
   Artist
   .findByIdAndRemove(req.params.id)
   .then(() => {
@@ -144,7 +144,7 @@ router.delete('/artist/:id', (req, res) => {
 
 // add JWT
 // create a new playlist
-router.post('/playlist', (req, res) => {
+router.post('/playlists', (req, res) => {
   const requiredFields = ['playlistName'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -240,7 +240,7 @@ router.post('/playlist', (req, res) => {
 // end router.post (create a new playlist)
 
 // update a playlist
-router.put('/playlist/:id', (req, res) => {
+router.put('/playlists/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and body id values mush match'
@@ -265,7 +265,7 @@ router.put('/playlist/:id', (req, res) => {
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
 // get a playlist
-router.get('/playlist/:id', (req, res) => {
+router.get('/playlists/:id', (req, res) => {
   Playlist
     .findById(req.params.id)
     // .populate({path: 'user', select: 'username'})
@@ -283,7 +283,7 @@ router.get('/playlist/:id', (req, res) => {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
-router.get('/playlist/user/:id', (req, res) => {
+router.get('/playlists/user/:id', (req, res) => {
   Playlist
     .find({'user': req.params.id})
     // .populate({path: 'user', select: 'username'})
@@ -298,7 +298,7 @@ router.get('/playlist/user/:id', (req, res) => {
 
 // NOT WORKING!!!!!
 // delete a playlist
-router.delete('/playlist/:id', (req, res) => {
+router.delete('/playlists/:id', (req, res) => {
   Playlist
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -313,7 +313,7 @@ router.delete('/playlist/:id', (req, res) => {
 // end router.delete (delete a playlist)
 
 // vote on a song
-router.put('/vote/:id', jwtAuth, (req, res) => {
+router.put('/votes/:id', jwtAuth, (req, res) => {
 
 // check for required query parameters
 }); // end router.put (vot on a song)

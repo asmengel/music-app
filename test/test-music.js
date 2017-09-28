@@ -170,27 +170,27 @@ describe('Music endpoints', function () {
     return closeServer();
   });
 
-  // get api/music/artist
+  // get api/music/artists
   // 20 artists (no more than)
   // res is json object
   // each artist match artistList.apiRepr()
   // if fail 500
 
-  // post api/music/artist
+  // post api/music/artists
   // currently broken
 
-  // put api/music/artist/:id
+  // put api/music/artists/:id
   // broken (post also broken)
 
   // delete api/music/artist/:id
 
-  // post /api/music/playlist
+  // post /api/music/playlists
   // working
 
   // put /api/music/playlist/:id
   let id = 'GET A PLAYLIST ID';
 
-  describe('/api/music/playlist/:id', function () {
+  describe('/api/music/playlists/:id', function () {
     // it.skip('Should update a playlist', function () {
     //   let fakeU = fakeUser();
     //   // Create an initial user
