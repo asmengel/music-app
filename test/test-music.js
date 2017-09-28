@@ -124,7 +124,7 @@ describe('Music endpoints', function () {
     const fakePlaylists = []; // create join collection
     for (let i=0; i<10; i++){
       fakePlaylists.push(fakePlaylist());
-      fakePlaylists[i].user = userIds[i]._id;
+      fakePlaylists[i].user = userIds[i];
     }
     console.log('fpk ',fakePlaylists);
 

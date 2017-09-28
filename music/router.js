@@ -29,6 +29,8 @@ function artistIsValid(artist) {
 
 
 // search for songs
+
+/////////////////////////////////////////////// should add artist by id for future
 router.get('/artist', (req, res) => {
   Artist
     .find()
@@ -64,24 +66,7 @@ router.post('/artist', (req, res) => {
   } else {
     res.status(500).json({error: 'Something went wrong'});
   }
-  // const requiredFields = ['artistName'];
-  // for(let i=0; i<requiredFields.length; i++) {
-  //   const field = requiredFields[i];
-  //   console.log(req.body);
-  //   console.log(Artist);
-  //   // this checks tier 1 of each object(artist)
-  //   if(!(field in req.body)) {
-  //     const message = `missing \`${field}\` in request body`
-  //     console.error(message);
-  //     return res.status(400).send(message);
-  //   }
-    
-  // } 
   
-    //  artistName: req.body.artistName,
-    //  albums: req.body.albums,
-    //  genres: req.body.genres
-    // figure out how to access data and go from there.
 });
 
 router.put('/artist/:id', (req, res) => {
@@ -91,7 +76,7 @@ router.put('/artist/:id', (req, res) => {
     });
   }
   const updated = {};
-  const updateableFields = ['artistName', 'albums[0].title', 'albums[0].songs[0].title']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+  const updateableFields = ['artistName', 'albums']; // figure out how to access data from schema  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
