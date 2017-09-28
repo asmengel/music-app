@@ -320,25 +320,37 @@ router.delete('/playlists/:id', jwtAuth, (req, res) => {
 
 // vote on a song
 
-router.put('/votes/:id', jwtAuth, (req, res) => {
-  Artist
-  .findByIdAndUpdate(req.body.album.$.votes)
-
-  .then(() => {
-    res.status(204).json({ message: 'you upvoted'});
-  })
-  .catch(err => {
-    console.error(err);
-    res.status(500).json({error: 'wrong on vote update'});
-  });
+router.put('/artists/:artistId/albums/:albumId/songs/:songId', jwtAuth, (req, res) => {
+  let {artistId , albumId, songId} = req.params;
+  return Artist
+    .findOne(
+      { 'albums._id': albumId } , { 'albums.$': 1} // $ is var for index
+    )
+    .then(artist=>{
+      console.log('art',artist);
+      artist.albums[0].songs.forEach(song=>{
+        console.log('medhurst sings',song);
+        console.log((song._id === songId));
+        console.log(song._id , songId);
+        if (song._id.toString() === songId) { 
+          console.log('ROI!');
+          song.votes = song.votes + 1 ;
+        }
+      });
+      return artist.save();
+    })
+    .then(() => {
+      res.status(204).json({ message: 'you upvoted'});
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'wrong on vote update'});
+    });
 
   // find content to vote on
-  // 
 
 // check for required query parameters
 }); // end router.put (vot on a song)
-
-
 
 // router.use('*', (req, res) => {
 //   res.status(404).json({message: 'cannot be found not found'});

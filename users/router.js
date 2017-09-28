@@ -93,7 +93,8 @@ function confirmUniqueUsername (username) {
 router.post('/', jsonParser, (req, res) => {
   const requiredFields = ['username', 'password', 'firstName', 'lastName'];
   const missingField = requiredFields.find(field => !(field in req.body));
-
+  console.log('rb',req.body);
+  console.log('mf',missingField);
   if (missingField) {  
     return res.status(422).json({
       code: 422,
