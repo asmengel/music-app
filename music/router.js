@@ -273,7 +273,7 @@ router.get('/playlists/:id', jwtAuth, (req, res) => {
     .then(playlist => {
       console.log(playlist);
       res.status(201).json(playlist);
-      // res.json(playlist.apiRepr());
+       //res.json(playlist.apiRepr());
     })
     .catch(err => {
       res.status(500).json({ error: 'something went horribly wrong' });
@@ -316,7 +316,7 @@ router.delete('/playlists/:id', jwtAuth, (req, res) => {
 
 router.put('/votes/:id', jwtAuth, (req, res) => {
   Artist
-  findByIdAndUpdate(req.body.album.$.votes)
+  .findByIdAndUpdate(req.body.album.$.votes)
   .then(() => {
     res.status(204).json({ message: 'you upvoted'});
   })
