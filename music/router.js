@@ -142,8 +142,9 @@ router.delete('/artist/:id', (req, res) => {
   });
 });
 
+// add JWT
 // create a new playlist
-router.post('/playlist', jwtAuth, (req, res) => {
+router.post('/playlist', (req, res) => {
   const requiredFields = ['playlistName'];
   const missingField = requiredFields.find(field => !(field in req.body));
 
@@ -226,7 +227,8 @@ router.post('/playlist', jwtAuth, (req, res) => {
       return Playlist.create({ playlistName });
     })
     .then(playlist => {
-      return res.status(201).json(playlist.apiRepr());
+      // APIREPR NOT WORKING !!!!!!!!!!
+      return res.status(201).json(playlist);
     })
     .catch(err => {
       if (err.reason === 'ValidationError') {
@@ -238,22 +240,21 @@ router.post('/playlist', jwtAuth, (req, res) => {
 // end router.post (create a new playlist)
 
 // update a playlist
-router.put('/playlist/:id', jwtAuth, (req, res) => {
+router.put('/playlist/:id', (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and body id values mush match'
     });
   }
   const updated = {};
-  const updateableFields = ['songs'];
+  const updateableFields = ['songs', 'playlistName'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
     }
   });
-  Playlist
-
-    .findByIdAndUpdate(req.params.id, { set: updated }, { new: true })
+  return Playlist
+    .findByIdAndUpdate(req.params.id, { $set: updated }, { new: true })
     .then(updatedPlaylist => res.status(204).end())
     .catch(err => res.status(500).json({ message: 'something went wrong' }));
 
@@ -282,32 +283,26 @@ router.get('/playlist/:id', (req, res) => {
 
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // APIREPR NOT WORKING !!!!!!!!!!!!!!!!!!
-router.get('/playlist', (req, res) => {
+router.get('/playlist/user/:id', (req, res) => {
   Playlist
-    .findOne()
+    .find({'user': req.params.id})
     // .populate({path: 'user', select: 'username'})
-    // .populate({path: 'user', select: 'username'})
-    .then((res)=>{
-      console.log(res);
+    .then(playlist => {
+      console.log('playlist',playlist);
+      return res.json(playlist);
+    })
+    .catch(err => {
+      res.status(500).json({ error: 'something went horribly wrong' });
     });
-    // .then(playlist => {
-    //   //console.log('playlist',playlist);
-    //   return res.json(playlist.apiRepr());
-    // })
-    // .catch(err => {
-    //   res.status(500).json({ error: 'something went horribly wrong' });
-    // });
-
 });
 
-// end router.get (update a playlist)
-
+// NOT WORKING!!!!!
 // delete a playlist
-router.delete('/playlist/:id', jwtAuth, (req, res) => {
+router.delete('/playlist/:id', (req, res) => {
   Playlist
     .findByIdAndRemove(req.params.id)
     .then(() => {
-      res.status(204).json({ message: 'sucess yo' });
+      return res.status(204).json({ message: 'sucess yo' });
     })
     .catch(err => {
       console.error(err);
