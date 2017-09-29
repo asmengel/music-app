@@ -231,7 +231,7 @@ http://localhost:8080/api/music/artists
   "artistName" : "<artist>",
   "genres" : [
   	"<genre>", "<genre>"
-  ]
+  ],
   "albums" : [
     { "title" : "<albumTitle>",
       "songs" : [
