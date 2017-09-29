@@ -23,7 +23,8 @@ function artistIsValid(artist) {
 
 // @@@@@@@@@@@@ IMPROVE: SHOW ONLY SONGS @@@@@@@@@@
 // search for songs
-router.get('/songs/', (req, res) => {
+
+router.get('/songs', (req, res) => {
   Artist
     .find({ 'albums.songs.title': req.query.song })
     .limit(20)
@@ -42,7 +43,7 @@ router.get('/songs/', (req, res) => {
 
 // @@@@@@@@@@@@ IMPROVE: SHOW ONLY ALBUMS @@@@@@@@@@
 // search for albums
-router.get('/albums/', (req, res) => {
+router.get('/albums', (req, res) => {
   Artist
     .find({ 'albums.title': req.query.album })
     .limit(20)
