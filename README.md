@@ -1,18 +1,19 @@
 # Amazing Playlist Builder!
 
-###What Does It Do?
+### What Does It Do?
+
 The APB allows users to create, save, use, and share playlists, tapped into the worlds most massive collections.
 
-###How Do I Deploy It?
+### How Do I Deploy It?
 *Option 1: Users*
 Use our interface. Go to http://wearestillunderconstruction.com, and follow the user prompts.
 
 *Option 2: Developers*
 Although we allow a minimal direct user interface, our primary goal is creating an API for developers to build amazing custom solutions.  Follow the RESTful endpoint instructions below.  Contact us at http://dontexpectustoreallyanswer.com/contactus if you run into difficulties.
 
-#How Can I Use The APB API
+# How Can I Use The APB API
 
-##General
+## General
 
 The APB API uses RESTful endpoints.  Each endpoint below identifies the http method, access level (public requires no credentials, private requires user credentials), and a general description of the method.
 Keywords within URIs are indicated via <keyword>.  E.g. to use:
@@ -24,7 +25,7 @@ substitute `<keyword>` with `purple` to find all song titles that include purple
 localhost:8080/api/music/songs?song=purple
 ````
 |
-##Users
+## Users
 
  Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -61,7 +62,7 @@ HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
 
-###Artists
+### Artists
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -76,7 +77,7 @@ http://localhost:8080/api/music/artists
 http://localhost:8080/api/music/artists/<artistId> 
 ````
 
-###Albums
+### Albums
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -85,7 +86,7 @@ http://localhost:8080/api/music/artists/<artistId>
 http://localhost:8080/api/music/albums?album=<keyword>
 ````
 
-###Songs
+### Songs
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -103,7 +104,7 @@ http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songI
 
 
 
-###Playlists
+### Playlists
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -166,7 +167,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 
 
 
-###Admin
+### Admin
 
 **Artists**
 Administrator access is required to edit the music database.  Contact us to inquire about administrator access.
