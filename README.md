@@ -43,7 +43,7 @@ All fields must be strings (e.g. password cannot be all numbers). Usernames and 
 Upon successful creation of the user account. Then the user needs to log in.  Redirect the user to a form to enter username and password. The submit function should submit the username & password as follows:
 ````http
 HTTP Header:
-Authorization: Basic <base64 encoded username &amp; password>
+Authorization: Basic <base64 encoded usernamepassword>
 ````
 The API APB will respond to a successful login with a JavaScript Web Token.  To access all private endpoints, include the token as follows:
 ````http
@@ -53,7 +53,7 @@ Authorization: Bearer <javascript web token>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Public | *load 20 artists with albums and songs* |
+| GET     | Public | *Load 20 artists with albums and songs. Can be useful for teaser content.* |
 ````http
 http://localhost:8080/api/music/artists
 ````
@@ -62,19 +62,21 @@ http://localhost:8080/api/music/artists
 | ------- |------- | ----------- |
 | GET     | Public | *find **songs** with title that includes keyword* |
 ````http
-localhost:8080/api/music/songs?song=<keyword>
+http://localhost:8080/api/music/songs?song=<keyword>
 ````
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
 | GET     | Public | *find **albums** with title that includes keyword* |
 ````http
-localhost:8080/api/music/albums?album=<keyword>
+http://localhost:8080/api/music/albums?album=<keyword>
 ````
 
-
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| POST     | Public | *find **albums** with title that includes keyword* |
 ````http
-localhost:8080/api/music/artists 
+http://localhost:8080/api/music/artists 
 ````
 ````json
 {
@@ -84,9 +86,11 @@ localhost:8080/api/music/artists
   ]
 }
 ````
-optional
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| PUT     | Public | *update **artists** by id* |
 ````http
-put /api/music/artist/:idjustposted
+http://localhost:8080/api/music/artist/<artistId>
 ````
 ````json
 {
@@ -94,37 +98,74 @@ put /api/music/artist/:idjustposted
   "artistName" : "Elvis Costello"
 }
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Public | *find **artists** by id* |
 ````http
-get /api/music/artists/:idjustposted 
+http://localhost:8080/api/music/artists/<artistId> 
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| DELETE     | Private | *delete **artist** by id* |
 ````http
-delete /api/music/artists/:idjustposted
+http://localhost:8080/api/music/artists/<artistId>
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| POST     | Private | *create a new **playlist** * |
 ````http
-post /api/music/playlists
+http://localhost:8080/api/music/playlists
 ````
 ````json
 {
-   "playlistName" : "The Best Mix Tape"
+    "id": "<playlist id>",
+	"playlistName" : "<playlistname is required>",
+	"songs" : [
+		{ "title" : "<songs are optional>" ,
+		  "_id" : "<id>"
+		}
+	]
 }
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| PUT     | Private | *update **playlist** by id* |
 ````http
-put /api/music/playlists/59ccd497ee7460a5ef248a76
+http://localhost:8080/api/music/playlists/<playlistId>
 ````
+Submit the information below in the request body as `Content Type` `Application/json`.
+Playlist id is required in the body, but will **NOT** be updated.
+Any other information included in the body will be updated.
+Invalid requests (other fields, incorrect formatting, etc.) will be rejected.  **IMPORTANT** This function performs a complete replace (delete all, then add all) for any field present in the request body.  If "songs" is present in the request body, then the request body should include **ALL** songs to be used in the playlist, not just a song to add or remove from the playlist.
 ````json
 {
-    "id": "59ccd497ee7460a5ef248a76",
-	"playlistName" : "road rage music"
+    "id": "<playlist id>",
+	"playlistName" : "<playlistname>",
+	"songs" : [
+		{ "title" : "<title>" ,
+		  "_id" : "<id>"
+		}
+	]
 }
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Private | *find **playlist** by id* |
 ````http
-get /api/music/playlists/59ccd497ee7460a5ef248a76
+http://localhost:8080/api/music/playlists/<playlistId>
 ````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Private | *find **playlists** by user* |
 ````http
-get /api/music/playlists/users/:idfromoneabove
+http://localhost:8080/api/music/playlists/users/<userId>
 ````
-vote: NOT WORKING >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| PUT     | Private | *increment **votes** of popularity of songs* |
+````http
+http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songId>
+````
 
 **bold**
 ```` js
