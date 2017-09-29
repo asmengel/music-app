@@ -192,7 +192,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 http://localhost:8080/api/music/playlists
 ````
 
->*request body* `Content Type` `Application/json`
+>*request body, `playlistName` is required, other fields are optional.* `Content Type` `Application/json`
 
 ````json
 {
