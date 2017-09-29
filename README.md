@@ -130,7 +130,7 @@ HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
 
-
+#The Good Stuff! Accessing Music!
 
 ### Artists
 
@@ -149,7 +149,6 @@ http://localhost:8080/api/music/
 ````http
 http://localhost:8080/api/music/artists/<artistId> 
 ````
-
 
 
 
@@ -258,7 +257,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 
 
 
-### Admin
+# Administrator Access
 
 **Artists**
 Administrator access is required to edit the music database.  Contact us to inquire about administrator access.
