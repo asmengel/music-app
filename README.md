@@ -12,11 +12,13 @@ Although we allow a minimal direct user interface, our primary goal is creating 
 
 **How Can I Use The APB API?**
 
-GET
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Public | *load 20 artists with albums and songs* |
 ````http
 localhost:8080/api/music/artists
 ````
-loads 20 artists (with albums and songs) 
+
 
 GET
 ````http
