@@ -27,6 +27,8 @@ localhost:8080/api/music/songs?song=purple
 |
 ## Users
 
+**Create User Account**
+
  Method  | Access | Description |
 | ------- |------- | ----------- |
 | POST     | Public | *create new **user** * |
@@ -45,6 +47,8 @@ All endpoints identified as "Private" require the user to have a valid APB user 
 ````
 All fields must be strings (e.g. password cannot be all numbers). Usernames and passwords must be explicitly trimmed. Usernames must be unique.  Passwords must be 10-72 characters in length.
 
+**User Login**
+
 Upon successful creation of the user account. Then the user needs to log in.  Redirect the user to a form to enter username and password. The submit function should submit the username & password as follows:
 | Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -55,12 +59,17 @@ http://localhost:8080/api/auth/login
 HTTP Header:
 Authorization: Basic <base64 encoded usernamepassword>
 ````
+
+**Accessing Private Endpoints**
+
 The API APB will respond to a successful login with a JavaScript Web Token.  To access all private endpoints, include the token as follows:
 ````http
 http://localhost:8080/api/<getRESTfulEndpointFromBelow>
 HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
+
+
 
 ### Artists
 
@@ -77,6 +86,9 @@ http://localhost:8080/api/music/artists
 http://localhost:8080/api/music/artists/<artistId> 
 ````
 
+
+
+
 ### Albums
 
 | Method  | Access | Description |
@@ -85,6 +97,9 @@ http://localhost:8080/api/music/artists/<artistId>
 ````http
 http://localhost:8080/api/music/albums?album=<keyword>
 ````
+
+
+
 
 ### Songs
 
@@ -213,7 +228,11 @@ http://localhost:8080/api/music/artists/<artistId>
   "artistName" : "Elvis Costello"
 }
 ````
+
 **Albums**
+
 Coming Soon!
+
 **Songs**
+
 Coming Soon!
