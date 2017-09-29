@@ -12,31 +12,67 @@ Although we allow a minimal direct user interface, our primary goal is creating 
 
 **How Can I Use The APB API?**
 
+General:
+The APB API uses RESTful endpoints.  Each endpoint below identifies the http method, access level (public requires no credentials, private requires user credentials), and a general description of the method.
+Keywords within URIs are indicated via <keyword>.  E.g. to use:
+````http
+localhost:8080/api/music/songs?song=<keyword>
+````
+substitute `<keyword>` with `purple` to find all song titles that include purple, per below.
+````http
+localhost:8080/api/music/songs?song=purple
+````
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| POST     | Public | *create new **user** * |
+````http
+http://localhost:8080/api/users
+````
+*User Accounts*
+All endpoints identified as "Private" require the user to have a valid APB user accounts.  You can allow users to create accounts from your app. The following 4 fields are required for users to create accounts. Submit this information within the request body as `Content Type` `Application/json`.
+````json
+{
+    "username": "<userentry>",
+    "password": "<userentry>",
+    "firstName": "<userentry>",
+    "lastName": "<userentry>"
+}
+````
+All fields must be strings (e.g. password cannot be all numbers). Usernames and passwords must be explicitly trimmed. Usernames must be unique.  Passwords must be 10-72 characters in length.
+
+Upon successful creation of the user account. Then the user needs to log in.  Redirect the user to a form to enter username and password. The submit function should submit the username & password as follows:
+````http
+HTTP Header:
+Authorization: Basic <base64 encoded username &amp; password>
+````
+The API APB will respond to a successful login with a JavaScript Web Token.  To access all private endpoints, include the token as follows:
+````http
+HTTP Header:
+Authorization: Bearer <javascript web token>
+````
+
 | Method  | Access | Description |
 | ------- |------- | ----------- |
 | GET     | Public | *load 20 artists with albums and songs* |
 ````http
-localhost:8080/api/music/artists
+http://localhost:8080/api/music/artists
 ````
 
-
-GET
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Public | *find **songs** with title that includes keyword* |
 ````http
-localhost:8080/api/music/songs?song=keyword
+localhost:8080/api/music/songs?song=<keyword>
 ````
-loads artists with songs that include teal 
 
-GET
+| Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET     | Public | *find **albums** with title that includes keyword* |
 ````http
-localhost:8080/api/music/albums?album=ivory
+localhost:8080/api/music/albums?album=<keyword>
 ````
-loads artists with albums that include ivory 
 
-4.
-create new user
-...then...
-login
-POST
+
 ````http
 localhost:8080/api/music/artists 
 ````
