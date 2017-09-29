@@ -174,9 +174,7 @@ http://localhost:8080/api/music/playlists
     "id": "<playlist id>",
 	"playlistName" : "<playlistname is required>",
 	"songs" : [
-		{ "title" : "<songs are optional>" ,
-		  "_id" : "<id>"
-		}
+		{ "_id" : "<id>" }
 	]
 }
 ````
@@ -200,9 +198,7 @@ Invalid requests (other fields, incorrect formatting, etc.) will be rejected.  *
     "id": "<playlist id>",
 	"playlistName" : "<playlistname>",
 	"songs" : [
-		{ "title" : "<title>" ,
-		  "_id" : "<id>"
-		}
+		{ "_id" : "<id>" }
 	]
 }
 ````
