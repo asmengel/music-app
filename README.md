@@ -47,7 +47,7 @@ You can allow users to create accounts from your app. The following 4 fields are
 http://localhost:8080/api/users
 ````
 
->*request body*
+>*request body* `Content Type` `Application/json`
 
 ````json
 {
@@ -74,7 +74,28 @@ HTTP Header:
 Authorization: Basic <base64 encoded usernamepassword>
 ````
 
-**Accessing Private Endpoints**
+**Update User Account**
+
+ Method  | Access | Description |
+| ------- |------- | ----------- |
+| PUT     | Public | update **user** |
+
+````http
+http://localhost:8080/api/users/<userId>
+````
+
+>*request body (include at least one field below)* `Content Type` `Application/json`
+
+````json
+{
+    "username": "<userentry>",
+    "password": "<userentry>",
+    "firstName": "<userentry>",
+    "lastName": "<userentry>"
+}
+````
+
+## Accessing Private Endpoints**
 
 The API APB will respond to a successful login with a JavaScript Web Token.  All endpoints identified as "Private" require the user to have a valid APB user accounts.  To access all private endpoints, include the token as follows:
 
@@ -167,7 +188,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 http://localhost:8080/api/music/playlists
 ````
 
->*request body*
+>*request body* `Content Type` `Application/json`
 
 ````json
 {
@@ -191,7 +212,8 @@ Submit the information below in the request body as `Content Type` `Application/
 Playlist id is required in the body, but will **NOT** be updated.
 Any other information included in the body will be updated.
 Invalid requests (other fields, incorrect formatting, etc.) will be rejected.  **IMPORTANT** This function performs a complete replace (delete all, then add all) for any field present in the request body.  If "songs" is present in the request body, then the request body should include **ALL** songs to be used in the playlist, not just a song to add or remove from the playlist.
->*request body*
+
+>*request body* `Content Type` `Application/json`
 
 ````json
 {
@@ -225,7 +247,8 @@ Administrator access is required to edit the music database.  Contact us to inqu
 ````http
 http://localhost:8080/api/music/artists 
 ````
->*request body*
+>*request body* `Content Type` `Application/json`
+
 ````json
 {
   "artistName" : "<artist>",
@@ -258,7 +281,9 @@ http://localhost:8080/api/music/artist/<artistId>
 ````http
 http://localhost:8080/api/music/artists/<artistId>
 ````
->*request body*
+
+>*request body* `Content Type` `Application/json`
+
 ````json
 {
   "id" : "idjustposted" ,
