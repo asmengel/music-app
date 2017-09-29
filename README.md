@@ -139,7 +139,7 @@ Authorization: Bearer <javascript web token>
 | GET     | Public | Load 20 artists with albums and songs. Can be useful for teaser content. |
 
 ````http
-https://vast-island-54766.herokuapp.com/api/music/
+https://vast-island-54766.herokuapp.com/api/music/artists
 ````
 
 | Method  | Access | Description |
