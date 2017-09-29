@@ -230,7 +230,7 @@ http://localhost:8080/api/music/artists
   "genres" : [
   	"<genre>", "<genre>"
   ]
-  "albums": [
+  "albums" : [
     { "title" : "<albumTitle>",
       "songs" : [
         {"title" : "<songTitle>"},
