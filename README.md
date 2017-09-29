@@ -274,6 +274,8 @@ http://localhost:8080/api/music/artists
 | ------- |------- | ----------- |
 | PUT     | Admin | update **artists** by id |
 
+The format for updating an artist is identical to creating an artist, but **ONLY** include in the request body the artist id and fields that should be updated.
+
 ````http
 http://localhost:8080/api/music/artist/<artistId>
 ````
