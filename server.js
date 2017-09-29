@@ -18,13 +18,9 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-
-// needed here? Or just in routers?
 const passport = require('passport');
-// const jwtAuth = passport.authenticate('jwt', { session: false }); // don't need this in server.js
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);

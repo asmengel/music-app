@@ -13,16 +13,13 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
-
-// function expects req.body to be passed in
-// checks 4 essential fields for new users and updates
 function validateUserFields(user) {
   const stringFields = ['username', 'password', 'firstName', 'lastName'];
   const nonStringField = stringFields.find(
     field => field in user && typeof user[field] !== 'string'
   );
 
-  if (nonStringField) {    
+  if (nonStringField) {
     return {
       code: 422,
       reason: 'ValidationError',
@@ -36,7 +33,7 @@ function validateUserFields(user) {
     field => user[field].trim() !== user[field]
   );
 
-  if (nonTrimmedField) {    
+  if (nonTrimmedField) {
     return {
       code: 422,
       reason: 'ValidationError',
@@ -58,7 +55,7 @@ function validateUserFields(user) {
     user[field].trim().length > sizedFields[field].max
   );
 
-  if (tooSmallField || tooLargeField) {    
+  if (tooSmallField || tooLargeField) {
     return {
       code: 422,
       reason: 'ValidationError',
@@ -72,11 +69,11 @@ function validateUserFields(user) {
   return { valid: true };
 }
 
-function confirmUniqueUsername (username) {
-  return User.find({username})
+function confirmUniqueUsername(username) {
+  return User.find({ username })
     .count()
-    .then(count => {      
-      if (count > 0) {        
+    .then(count => {
+      if (count > 0) {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
@@ -93,9 +90,9 @@ function confirmUniqueUsername (username) {
 router.post('/', jsonParser, (req, res) => {
   const requiredFields = ['username', 'password', 'firstName', 'lastName'];
   const missingField = requiredFields.find(field => !(field in req.body));
-  console.log('rb',req.body);
-  console.log('mf',missingField);
-  if (missingField) {  
+  console.log('rb', req.body);
+  console.log('mf', missingField);
+  if (missingField) {
     return res.status(422).json({
       code: 422,
       reason: 'ValidationError',
@@ -104,7 +101,7 @@ router.post('/', jsonParser, (req, res) => {
     });
   }
 
-  let userValid = {};  
+  let userValid = {};
   if (validateUserFields(req.body).valid === true) {
     userValid = req.body;
   } else {
@@ -112,12 +109,12 @@ router.post('/', jsonParser, (req, res) => {
     return res.status(code).json(validateUserFields(req.body));
   }
 
-  let { username, password , lastName, firstName } = userValid;
+  let { username, password, lastName, firstName } = userValid;
 
   return User.find({ username })
     .count()
-    .then(count => {      
-      if (count > 0) {        
+    .then(count => {
+      if (count > 0) {
         return Promise.reject({
           code: 422,
           reason: 'ValidationError',
@@ -127,13 +124,13 @@ router.post('/', jsonParser, (req, res) => {
       }
       return User.hashPassword(password);
     })
-    .then(hash => {      
+    .then(hash => {
       return User.create({ username, password: hash, lastName, firstName });
     })
-    .then(user => {      
+    .then(user => {
       return res.status(201).json(user.apiRepr());
     })
-    .catch(err => {      
+    .catch(err => {
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }
@@ -141,10 +138,37 @@ router.post('/', jsonParser, (req, res) => {
     });
 });
 
+// access user by id
+router.get('/:id', jwtAuth, (req, res) => {
+  return User.findById()
+    .then(user => {
+      return res.status(200).json(user.apiRepr());
+    })
+    .catch(err => {
+      res.status(500).json({ code: 500, message: 'Internal server error' });
+    });;
+});
+
+// delete user and playlists
+router.delete('/:id', jwtAuth, (req, res) => {
+  User
+    .findByIdAndRemove(req.params.id)
+    .then(() => {
+      Playlist
+        .remove({ user: req.params.id })
+    })
+    .then(() => {
+      res.status(204).end();
+    })
+    .catch(err => {
+      return res.status(500).json({ message: 'something went wrong' });
+    });
+});
+
 // update a user
 router.put('/:id', jsonParser, jwtAuth, (req, res) => {
 
-  let userValid = {};  
+  let userValid = {};
   if (validateUserFields(req.body).valid === true) {
     userValid = req.body;
   } else {
@@ -153,11 +177,11 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
   }
 
   return confirmUniqueUsername(userValid.username)
-    .then(()=>{
+    .then(() => {
       return User.findById(req.params.id)
         .count()
-        .then(count => {      
-          if (count === 0) {        
+        .then(count => {
+          if (count === 0) {
             return Promise.reject({
               code: 422,
               reason: 'ValidationError',
@@ -166,28 +190,28 @@ router.put('/:id', jsonParser, jwtAuth, (req, res) => {
             });
           }
           if (userValid.password) {
-            return User.hashPassword(userValid.password);    
+            return User.hashPassword(userValid.password);
           } else {
             return '';
           }
         })
-        .then((hash)=>{
+        .then((hash) => {
           if (hash) {
             userValid.password = hash;
           }
-        })      
-        .then(()=> {
+        })
+        .then(() => {
           return User.findByIdAndUpdate(req.params.id,
             { $set: userValid },
-            { new: true }, 
-            function(err, user) {
+            { new: true },
+            function (err, user) {
               if (err) return res.send(err);
               res.status(201).json(user.apiRepr());
             }
-          ); 
-        }); 
+          );
+        });
     })
-    .catch(err => {    
+    .catch(err => {
       if (err.reason === 'ValidationError') {
         return res.status(err.code).json(err);
       }

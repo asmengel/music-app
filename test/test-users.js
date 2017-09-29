@@ -1,20 +1,16 @@
 'use strict';
-//require('dotenv').config(); // this is unconditional, which will require heroku to install it (which is not needed), but since it is listed in core dependencies, it at least won't break heroku. Later learn to do it conditionally.
 
 const { TEST_DATABASE_URL, TEST_PORT } = require('../config');
 process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-
 const { app, runServer, closeServer } = require('../server');
 const { User } = require('../users');
-
 const expect = chai.expect;
 chai.use(chaiHttp);
-
 const faker = require('faker');
 
-describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
+describe('/api/users', function () {
 
   function fakeUser() {
     return {
@@ -41,7 +37,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
   });
 
   afterEach(function () {
-    //console.log('after each');
+    
   });
 
   after(function () {
@@ -49,7 +45,9 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
   });
 
   describe('/api/users', function () {
+    
     describe('POST', function () {
+      
       it('Should reject users with missing username', function () {
         let fakeU = fakeUser();
         delete fakeU.username;
@@ -71,6 +69,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
+
       it('Should reject users with missing password', function () {
         let fakeU = fakeUser();
         delete fakeU.password;
@@ -92,6 +91,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('password');
           });
       });
+
       it('Should reject users with non-string username', function () {
         let fakeU = fakeUser();
         fakeU.username = 1234;
@@ -115,6 +115,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
+
       it('Should reject users with non-string password', function () {
         let fakeU = fakeUser();
         fakeU.password = 1234;
@@ -138,6 +139,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('password');
           });
       });
+
       it('Should reject users with non-trimmed username', function () {
         let fakeU = fakeUser();
         fakeU.username = ' untrimmed ';
@@ -152,7 +154,6 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -162,6 +163,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
+
       it('Should reject users with non-trimmed password', function () {
         let fakeU = fakeUser();
         fakeU.password = ' untrimmed ';
@@ -176,7 +178,6 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             if (err instanceof chai.AssertionError) {
               throw err;
             }
-
             const res = err.response;
             expect(res).to.have.status(422);
             expect(res.body.reason).to.equal('ValidationError');
@@ -186,6 +187,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('password');
           });
       });
+
       it('Should reject users with empty username', function () {
         let fakeU = fakeUser();
         fakeU.username = '';
@@ -209,6 +211,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
+
       it('Should reject users with password fewer than ten characters', function () {
         let fakeU = fakeUser();
         fakeU.password = 'abc';
@@ -232,6 +235,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('password');
           });
       });
+
       it('Should reject users with password greater than 72 characters', function () {
         let fakeU = fakeUser();
         fakeU.password = new Array(73).fill('a').join('');
@@ -255,11 +259,11 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('password');
           });
       });
+
       it('Should reject users with duplicate username', function () {
         let fakeU = fakeUser();
         return User.create( fakeU )
           .then(() => {
-            // Try to create a 2nd user with same username
             return chai.request(app)
               .post('/api/users')
               .send( fakeU );
@@ -280,6 +284,7 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body.location).to.equal('username');
           });
       });
+
       it('Should create a new user!', function () {
         let fakeU = fakeUser();
         return chai
@@ -292,29 +297,17 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
             expect(res.body).to.have.all.keys('username', 'firstName', 'lastName', 'id');
             expect(res.body.username).to.equal(fakeU.username);
           })
-          // WE GET AN UNHANDLED PROMISE REJECTION WARNING HERE
-          // .then(() => {
-          //   return User.findOne({ username: fakeU.username });
-          // })
-          // .then(user => {
-          //   expect(user).to.not.be.null;
-          //   return user.validatePassword(fakeU.password);
-          // })
-          // .then(passwordIsCorrect => {
-          //   expect(passwordIsCorrect).to.be.true;
-          // })
           .catch(err => {
             if (err instanceof chai.AssertionError) {
               throw err;
             }
           });
       });
+
       it('Should not allow users to be deleted', function() {
          return User.findOne()
           .then(res => {
-            console.log(res);
             expect(res).to.be.an('object');
-           //expect(res).to.include.all.keys('username', 'firstName', 'lastName', '_id');
            expect({foo:123, bar:456}).to.include.all.keys('foo');
             return res._id;
           })
@@ -323,25 +316,19 @@ describe('/api/users', function () { // BE SURE TO ADD firstName and lastName
               .request(app)
               .delete(`/api/users/${userId}`);
           })
-          .then(() => {
-            expect.fail(null, null, 'Request should not succeed');
-          })
           .catch(err => {
             if (err instanceof chai.AssertionError) {
               throw err;
             }
             const res = err.response;
-            expect(res).to.have.status(404);
-            expect(res.body.message).to.equal(
-              'Not Found'
-            );
+            expect(res).to.have.status(401);
           });
       });
+
       it('Should update a user', function() {
         let originalUser = {};
        return User.findOne()
           .then(resp => {
-            console.log('broken test', resp);
             expect(resp).to.be.an('object');
             expect(resp.username).to.be.a('string');
             expect(resp.firstName).to.be.a('string');

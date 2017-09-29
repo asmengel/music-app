@@ -3,14 +3,12 @@
 const { app, runServer, closeServer } = require('./server');
 const { User } = require('./users');
 const { Artist, Playlist } = require('./music');
-
 const faker = require('faker');
-
-const fakeArtists = []; // create fake artists and users (two main collections)
+const fakeArtists = []; 
 const fakeUsers = [];    
 let fakeSongIds = [];
 let userIds = [];
-const fakePlaylists = []; // create join collection
+const fakePlaylists = []; 
 const userCt = 10;
 let songCt;
 
@@ -45,11 +43,11 @@ function fakeAlbumList() {
 }
 
 function fakeGenres() {
-  let arrayofGenres = [ // we have 20
+  let arrayofGenres = [ 
     'Hip Hop', 'Folk', 'Classical', 'Heavy Metal', 'Punk', 'New Wave', 'Pop', 'Reggae', 'Rap', 'Country', 'Bluegrass', 'R&B', 'Motown Revival', 'Doo Wop', 'Disco', 
     'Crunk', 'Trap', 'Jazz', 'Electronica', 'Soul'
   ];
-  let randomNumber = Math.floor(Math.random() * 10); // 0 - 10
+  let randomNumber = Math.floor(Math.random() * 10); 
   return [ 
     arrayofGenres[randomNumber], 
     arrayofGenres[randomNumber + 2],
@@ -86,7 +84,7 @@ function fakePlaylist() {
 return runServer()
   .then(() => {
     return Artist.remove({});
-  }) // clear all 3 tables
+  }) 
   .then(() => {
     return User.remove({});
   }) 
@@ -131,12 +129,10 @@ return runServer()
 
     for (let i=0; i<userCt; i++){
       fakePlaylists.push(fakePlaylist());
-      console.log(i);
-      fakePlaylists[i].user = userIds[i]; // each user gets 1 playlist
+      fakePlaylists[i].user = userIds[i]; 
       let songIndices = [];
       for (let skip = 0;skip<songsPerUser;skip++)
         fakePlaylists[i].songs.push(fakeSongIds[i+(skip*rotations)].id);
-      // console.log(songIndices);
     }
     return fakePlaylists;
   })

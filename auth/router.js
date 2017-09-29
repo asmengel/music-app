@@ -3,17 +3,15 @@
 
 const express = require('express');
 const router = express.Router();
-
 const config = require('../config');
-
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
-const createAuthToken = function(user) {
+const createAuthToken = function (user) {
   return jwt.sign({ user }, config.JWT_SECRET, {
     subject: user.username,
     expiresIn: config.JWT_EXPIRY,
-    algorithm: 'HS256' // this is default, shouldn't need to use
+    algorithm: 'HS256'
   });
 };
 
