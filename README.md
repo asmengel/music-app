@@ -40,8 +40,7 @@ Each entity in the database has a read-only unique Mongo Object Id.  See https:/
 
 **Create User Account**
 
-You can allow users to create accounts from your app. The following 4 fields are required for users to create accounts. Submit this information within the request body as `Content Type` `Application/json`.
-
+This creates APB user accounts.
 
  Method  | Access | Description |
 | ------- |------- | ----------- |
@@ -51,7 +50,7 @@ You can allow users to create accounts from your app. The following 4 fields are
 http://localhost:8080/api/users
 ````
 
->*request body* `Content Type` `Application/json`
+>*request body (all 4 fields are required)* `Content Type` `Application/json`
 
 ````json
 {
@@ -82,7 +81,7 @@ Authorization: Basic <base64 encoded usernamepassword>
 
  Method  | Access | Description |
 | ------- |------- | ----------- |
-| PUT     | Private | update **user** |
+| PUT     | Private | update **user** account |
 
 ````http
 http://localhost:8080/api/users/<userId>
@@ -97,6 +96,22 @@ http://localhost:8080/api/users/<userId>
     "firstName": "<userentry>",
     "lastName": "<userentry>"
 }
+````
+
+**Delete User Account**
+
+ Method  | Access | Description |
+| ------- |------- | ----------- |
+| DELETE | Private | delete **user** account |
+
+**Access User Account**
+
+ Method  | Access | Description |
+| ------- |------- | ----------- |
+| GET | Private | access **user** account |
+
+````http
+http://localhost:8080/api/users/<userId>
 ````
 
 ## Accessing Private Endpoints
@@ -164,8 +179,6 @@ http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songI
 ````
 
 
-
-
 ### Playlists
 
 | Method  | Access | Description |
@@ -192,7 +205,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 http://localhost:8080/api/music/playlists
 ````
 
->*request body, `playlistName` is required, other fields are optional.* `Content Type` `Application/json`
+>*request body,* (`playlistName` *is required, other fields are optional.)* `Content Type` `Application/json`
 
 ````json
 {
@@ -251,7 +264,7 @@ Administrator access is required to edit the music database.  Contact us to inqu
 ````http
 http://localhost:8080/api/music/artists 
 ````
->*request body, artistName is required, other fields are optional* `Content Type` `Application/json`
+>*request body (artistName is required, other fields are optional)* `Content Type` `Application/json`
 
 ````json
 {
