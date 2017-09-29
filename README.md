@@ -295,7 +295,7 @@ https://vast-island-54766.herokuapp.com/api/music/artists
 The format for updating an artist is identical to creating an artist, but **ONLY** include in the request body the artist id and fields that should be updated.
 
 ````http
-https://vast-island-54766.herokuapp.com/api/music/artist/<artistId>
+https://vast-island-54766.herokuapp.com/api/music/artists/<artistId>
 ````
 
 | Method  | Access | Description |
