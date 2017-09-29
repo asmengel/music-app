@@ -130,7 +130,7 @@ HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
 
-#The Good Stuff! Accessing Music!
+# The Good Stuff! Accessing Music!
 
 ### Artists
 
