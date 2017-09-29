@@ -79,7 +79,7 @@ Authorization: Basic <base64 encoded usernamepassword>
 The API APB will respond to a successful login with a JavaScript Web Token.  All endpoints identified as "Private" require the user to have a valid APB user accounts.  To access all private endpoints, include the token as follows:
 
 ````http
-http://localhost:8080/api/<getRESTfulEndpointFromBelow>
+http://localhost:8080/api/<APB-RESTfulEndpoint>
 HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
