@@ -30,6 +30,8 @@ substitute `<keyword>` with `purple` to find all song titles that include purple
 localhost:8080/api/music/songs?song=purple
 ````
 
+If not specified, request bodies and request headers are not required.  E.g. for most get endpoints, the request body can be blank, or if populated, will be ignored.
+
 ## Users
 
 **Create User Account**
