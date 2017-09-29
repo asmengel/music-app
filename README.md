@@ -104,6 +104,12 @@ http://localhost:8080/api/users/<userId>
 | ------- |------- | ----------- |
 | DELETE | Private | delete **user** account |
 
+This will also delete associated user playlists.
+
+````http
+http://localhost:8080/api/users/<userId>
+````
+
 **Access User Account**
 
  Method  | Access | Description |
