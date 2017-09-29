@@ -2,22 +2,24 @@
 
 ### What Does It Do?
 
-The APB allows users to create, save, use, and share playlists, tapped into the worlds most massive collections.
+The APB allows users to create, save, use, and share playlists, tapped into the worlds most massive music collections.
 
 ### How Do I Deploy APB?
 
 *Option 1: Users*
+
 Use our interface. Go to http://wearestillunderconstruction.com, and follow the user prompts.
 
 *Option 2: Developers*
+
 Although we allow a minimal direct user interface, our primary goal is creating an API for developers to build amazing custom solutions.  Follow the RESTful endpoint instructions below.  Contact us at http://dontexpectustoreallyanswer.com/contactus if you run into difficulties.
 
-# How Can I Use The APB API
+# How Can I Use The APB API?
 
 ## General
 
 The APB API uses RESTful endpoints.  Each endpoint below identifies the http method, access level (public requires no credentials, private requires user credentials), and a general description of the method.
-Keywords within URIs are indicated via <keyword>.  E.g. to use:
+Keywords within URIs are indicated via `<keyword>`.  E.g. to use:
 
 ````http
 localhost:8080/api/music/songs?song=<keyword>
@@ -34,7 +36,7 @@ localhost:8080/api/music/songs?song=purple
 
  Method  | Access | Description |
 | ------- |------- | ----------- |
-| POST     | Public | *create new **user** * |
+| POST     | Public | create new **user** |
 
 ````http
 http://localhost:8080/api/users
@@ -60,7 +62,7 @@ Upon successful creation of the user account. Then the user needs to log in.  Re
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| POST   | Public | * **log in** to user account* |
+| POST   | Public | **log in** to user account |
 
 ````http
 http://localhost:8080/api/auth/login 
@@ -84,7 +86,7 @@ Authorization: Bearer <javascript web token>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Public | *Load 20 artists with albums and songs. Can be useful for teaser content.* |
+| GET     | Public | Load 20 artists with albums and songs. Can be useful for teaser content. |
 
 ````http
 http://localhost:8080/api/music/artists
@@ -92,7 +94,7 @@ http://localhost:8080/api/music/artists
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Public | *find **artists** by id* |
+| GET     | Public | find **artists** by id |
 
 ````http
 http://localhost:8080/api/music/artists/<artistId> 
@@ -105,7 +107,7 @@ http://localhost:8080/api/music/artists/<artistId>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Public | *find **albums** with title that includes keyword* |
+| GET     | Public | find **albums** with title that includes keyword |
 
 ````http
 http://localhost:8080/api/music/albums?album=<keyword>
@@ -118,7 +120,7 @@ http://localhost:8080/api/music/albums?album=<keyword>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Public | *find **songs** with title that includes keyword* |
+| GET     | Public | find **songs** with title that includes keyword |
 
 ````http
 http://localhost:8080/api/music/songs?song=<keyword>
@@ -126,7 +128,7 @@ http://localhost:8080/api/music/songs?song=<keyword>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| PUT     | Private | *increment **votes** of popularity of songs* |
+| PUT     | Private | increment **votes** of popularity of songs |
 
 ````http
 http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songId>
@@ -139,7 +141,7 @@ http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songI
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Private | *find **playlists** by user* |
+| GET     | Private | find **playlists** by user |
 
 ````http
 http://localhost:8080/api/music/playlists/users/<userId>
@@ -147,7 +149,7 @@ http://localhost:8080/api/music/playlists/users/<userId>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| GET     | Private | *find **playlist** by id* |
+| GET     | Private | find **playlist** by id |
 
 ````http
 http://localhost:8080/api/music/playlists/<playlistId>
@@ -155,7 +157,7 @@ http://localhost:8080/api/music/playlists/<playlistId>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| POST     | Private | *create a new **playlist** * |
+| POST     | Private | create a new **playlist** |
 
 ````http
 http://localhost:8080/api/music/playlists
@@ -177,7 +179,7 @@ http://localhost:8080/api/music/playlists
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| PUT     | Private | *update **playlist** by id* |
+| PUT     | Private | update **playlist** by id |
 
 ````http
 http://localhost:8080/api/music/playlists/<playlistId>
@@ -203,7 +205,7 @@ Invalid requests (other fields, incorrect formatting, etc.) will be rejected.  *
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| DELETE  | Private | *delete **playlist** by id* |
+| DELETE  | Private | delete **playlist** by id |
 
 ````http
 http://localhost:8080/api/music/playlists/<playlistId>
@@ -218,7 +220,7 @@ Administrator access is required to edit the music database.  Contact us to inqu
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| POST     | Admin | *add an **artist**, which can include genres, albums and songs* |
+| POST     | Admin | add an **artist**, which can include genres, albums and songs |
 
 ````http
 http://localhost:8080/api/music/artists 
@@ -243,7 +245,7 @@ http://localhost:8080/api/music/artists
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| PUT     | Admin | *update **artists** by id* |
+| PUT     | Admin | update **artists** by id |
 
 ````http
 http://localhost:8080/api/music/artist/<artistId>
@@ -251,7 +253,7 @@ http://localhost:8080/api/music/artist/<artistId>
 
 | Method  | Access | Description |
 | ------- |------- | ----------- |
-| DELETE  | Admin | *delete **artist** by id* |
+| DELETE  | Admin | delete **artist** by id |
 
 ````http
 http://localhost:8080/api/music/artists/<artistId>
