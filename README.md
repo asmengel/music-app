@@ -215,7 +215,7 @@ https://vast-island-54766.herokuapp.com/api/music/playlists
 ````json
 {
     "id": "<playlist id>",
-	"playlistName" : "<playlistname is required>",
+	"playlistName" : "<playlistName>",
 	"songs" : [
 		{ "_id" : "<id>" }
 	]
@@ -273,7 +273,7 @@ https://vast-island-54766.herokuapp.com/api/music/artists
 
 ````json
 {
-  "artistName" : "<artist>",
+  "artistName" : "<artistName>",
   "genres" : [
   	"<genre>", "<genre>"
   ],
@@ -310,7 +310,7 @@ https://vast-island-54766.herokuapp.com/api/music/artists/<artistId>
 
 ````json
 {
-  "id" : "idjustposted" ,
+  "id" : "<id>" ,
 }
 ````
 
