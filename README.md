@@ -8,11 +8,11 @@ The APB allows users to create, save, use, and share playlists, tapped into the 
 
 *Option 1: Users*
 
-Use our interface. Go to http://wedontreallyhaveafrontendyet.com, and follow the user prompts.
+Use our interface. Go to http://wedontreallyhaveafrontendyet.invalid, and follow the user prompts.
 
 *Option 2: Developers*
 
-Although we allow a minimal direct user interface, our primary goal is creating an API for developers to build amazing custom solutions.  Follow the RESTful endpoint instructions below.  Contact us at http://dontexpectustoreallyanswer.com/contactus if you run into difficulties.
+Although we allow a minimal direct user interface, our primary goal is creating an API for developers to build amazing custom solutions.  Follow the RESTful endpoint instructions below.  Contact us at http://dontexpectustoreallyanswer.example/contactus if you run into difficulties.
 
 # How Can I Use The APB API?
 
@@ -22,12 +22,12 @@ The APB API uses RESTful endpoints.  Each endpoint below identifies the http met
 Keywords within URIs are indicated via `<keyword>`.  E.g. to use:
 
 ````http
-localhost:8080/api/music/songs?song=<keyword>
+https://vast-island-54766.herokuapp.com/api/music/songs?song=<keyword>
 ````
 substitute `<keyword>` with `purple` to find all song titles that include purple, per below.
 
 ````http
-localhost:8080/api/music/songs?song=purple
+https://vast-island-54766.herokuapp.com/api/music/songs?song=purple
 ````
 
 If not specified, request bodies and request headers are not required.  E.g. for most get endpoints, the request body can be blank, or if populated, will be ignored.
@@ -47,7 +47,7 @@ This creates APB user accounts.
 | POST     | Public | create new **user** |
 
 ````http
-http://localhost:8080/api/users
+https://vast-island-54766.herokuapp.com/api/users
 ````
 
 >*request body (all 4 fields are required)* `Content Type` `Application/json`
@@ -72,19 +72,19 @@ Upon successful creation of the user account. Then the user needs to log in.  Re
 | POST   | Public | **log in** to user account |
 
 ````http
-http://localhost:8080/api/auth/login 
+https://vast-island-54766.herokuapp.com/api/auth/login 
 HTTP Header:
 Authorization: Basic <base64 encoded usernamepassword>
 ````
 
 **Update User Account**
 
- Method  | Access | Description |
+| Method  | Access | Description |
 | ------- |------- | ----------- |
 | PUT     | Private | update **user** account |
 
 ````http
-http://localhost:8080/api/users/<userId>
+https://vast-island-54766.herokuapp.com/api/users/<userId>
 ````
 
 >*request body (include at least one field below)* `Content Type` `Application/json`
@@ -100,24 +100,24 @@ http://localhost:8080/api/users/<userId>
 
 **Delete User Account**
 
- Method  | Access | Description |
+| Method  | Access | Description |
 | ------- |------- | ----------- |
 | DELETE | Private | delete **user** account |
 
 This will also delete associated user playlists.
 
 ````http
-http://localhost:8080/api/users/<userId>
+https://vast-island-54766.herokuapp.com/api/users/<userId>
 ````
 
 **Access User Account**
 
- Method  | Access | Description |
+| Method  | Access | Description |
 | ------- |------- | ----------- |
 | GET | Private | access **user** account |
 
 ````http
-http://localhost:8080/api/users/<userId>
+https://vast-island-54766.herokuapp.com/api/users/<userId>
 ````
 
 ## Accessing Private Endpoints
@@ -125,7 +125,7 @@ http://localhost:8080/api/users/<userId>
 The API APB will respond to a successful login with a JavaScript Web Token.  All endpoints identified as "Private" require the user to have a valid APB user accounts.  To access all private endpoints, include the token as follows:
 
 ````http
-http://localhost:8080/api/<APB-RESTfulEndpoint>
+https://vast-island-54766.herokuapp.com/api/<APB-RESTfulEndpoint>
 HTTP Header:
 Authorization: Bearer <javascript web token>
 ````
@@ -139,7 +139,7 @@ Authorization: Bearer <javascript web token>
 | GET     | Public | Load 20 artists with albums and songs. Can be useful for teaser content. |
 
 ````http
-http://localhost:8080/api/music/
+https://vast-island-54766.herokuapp.com/api/music/
 ````
 
 | Method  | Access | Description |
@@ -147,7 +147,7 @@ http://localhost:8080/api/music/
 | GET     | Public | find **artists** by id |
 
 ````http
-http://localhost:8080/api/music/artists/<artistId> 
+https://vast-island-54766.herokuapp.com/api/music/artists/<artistId> 
 ````
 
 
@@ -159,7 +159,7 @@ http://localhost:8080/api/music/artists/<artistId>
 | GET     | Public | find **albums** with title that includes keyword |
 
 ````http
-http://localhost:8080/api/music/albums?album=<keyword>
+https://vast-island-54766.herokuapp.com/api/music/albums?album=<keyword>
 ````
 
 
@@ -172,7 +172,7 @@ http://localhost:8080/api/music/albums?album=<keyword>
 | GET     | Public | find **songs** with title that includes keyword |
 
 ````http
-http://localhost:8080/api/music/songs?song=<keyword>
+https://vast-island-54766.herokuapp.com/api/music/songs?song=<keyword>
 ````
 
 | Method  | Access | Description |
@@ -180,7 +180,7 @@ http://localhost:8080/api/music/songs?song=<keyword>
 | PUT     | Private | increment **votes** of popularity of songs |
 
 ````http
-http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songId>
+https://vast-island-54766.herokuapp.com/api/music/artists/<artistId>/albums/<albumId>/songs/<songId>
 ````
 
 
@@ -191,7 +191,7 @@ http://localhost:8080/api/music/artists/<artistId>/albums/<albumId>/songs/<songI
 | GET     | Private | find **playlists** by user |
 
 ````http
-http://localhost:8080/api/music/playlists/users/<userId>
+https://vast-island-54766.herokuapp.com/api/music/playlists/users/<userId>
 ````
 
 | Method  | Access | Description |
@@ -199,7 +199,7 @@ http://localhost:8080/api/music/playlists/users/<userId>
 | GET     | Private | find **playlist** by id |
 
 ````http
-http://localhost:8080/api/music/playlists/<playlistId>
+https://vast-island-54766.herokuapp.com/api/music/playlists/<playlistId>
 ````
 
 | Method  | Access | Description |
@@ -207,10 +207,10 @@ http://localhost:8080/api/music/playlists/<playlistId>
 | POST     | Private | create a new **playlist** |
 
 ````http
-http://localhost:8080/api/music/playlists
+https://vast-island-54766.herokuapp.com/api/music/playlists
 ````
 
->*request body,* (`playlistName` *is required, other fields are optional.)* `Content Type` `Application/json`
+>*request body, (* `playlistName` *is required, other fields are optional.)* `Content Type` `Application/json`
 
 ````json
 {
@@ -227,7 +227,7 @@ http://localhost:8080/api/music/playlists
 | PUT     | Private | update **playlist** by id |
 
 ````http
-http://localhost:8080/api/music/playlists/<playlistId>
+https://vast-island-54766.herokuapp.com/api/music/playlists/<playlistId>
 ````
 
 Submit the information below in the request body as `Content Type` `Application/json`.
@@ -252,7 +252,7 @@ Invalid requests (other fields, incorrect formatting, etc.) will be rejected.  *
 | DELETE  | Private | delete **playlist** by id |
 
 ````http
-http://localhost:8080/api/music/playlists/<playlistId>
+https://vast-island-54766.herokuapp.com/api/music/playlists/<playlistId>
 ````
 
 
@@ -267,7 +267,7 @@ Administrator access is required to edit the music database.  Contact us to inqu
 | POST     | Admin | add an **artist**, which can include genres, albums and songs |
 
 ````http
-http://localhost:8080/api/music/artists 
+https://vast-island-54766.herokuapp.com/api/music/artists 
 ````
 >*request body (artistName is required, other fields are optional)* `Content Type` `Application/json`
 
@@ -295,7 +295,7 @@ http://localhost:8080/api/music/artists
 The format for updating an artist is identical to creating an artist, but **ONLY** include in the request body the artist id and fields that should be updated.
 
 ````http
-http://localhost:8080/api/music/artist/<artistId>
+https://vast-island-54766.herokuapp.com/api/music/artist/<artistId>
 ````
 
 | Method  | Access | Description |
@@ -303,7 +303,7 @@ http://localhost:8080/api/music/artist/<artistId>
 | DELETE  | Admin | delete **artist** by id |
 
 ````http
-http://localhost:8080/api/music/artists/<artistId>
+https://vast-island-54766.herokuapp.com/api/music/artists/<artistId>
 ````
 
 >*request body (id is required in body, and must match request parameter)* `Content Type` `Application/json`
