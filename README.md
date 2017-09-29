@@ -307,12 +307,11 @@ http://localhost:8080/api/music/artist/<artistId>
 http://localhost:8080/api/music/artists/<artistId>
 ````
 
->*request body* `Content Type` `Application/json`
+>*request body (id is required in body, and must match request parameter)* `Content Type` `Application/json`
 
 ````json
 {
   "id" : "idjustposted" ,
-  "artistName" : "Elvis Costello"
 }
 ````
 
