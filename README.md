@@ -8,7 +8,7 @@ The APB allows users to create, save, use, and share playlists, tapped into the 
 
 *Option 1: Users*
 
-Use our interface. Go to http://wearestillunderconstruction.com, and follow the user prompts.
+Use our interface. Go to http://wedontreallyhaveafrontendyet.com, and follow the user prompts.
 
 *Option 2: Developers*
 
