@@ -36,6 +36,9 @@ If not specified, request bodies and request headers are not required.  E.g. for
 
 **Create User Account**
 
+You can allow users to create accounts from your app. The following 4 fields are required for users to create accounts. Submit this information within the request body as `Content Type` `Application/json`.
+
+
  Method  | Access | Description |
 | ------- |------- | ----------- |
 | POST     | Public | create new **user** |
@@ -44,7 +47,6 @@ If not specified, request bodies and request headers are not required.  E.g. for
 http://localhost:8080/api/users
 ````
 
-All endpoints identified as "Private" require the user to have a valid APB user accounts.  You can allow users to create accounts from your app. The following 4 fields are required for users to create accounts. Submit this information within the request body as `Content Type` `Application/json`.
 >*request body*
 
 ````json
@@ -74,7 +76,7 @@ Authorization: Basic <base64 encoded usernamepassword>
 
 **Accessing Private Endpoints**
 
-The API APB will respond to a successful login with a JavaScript Web Token.  To access all private endpoints, include the token as follows:
+The API APB will respond to a successful login with a JavaScript Web Token.  All endpoints identified as "Private" require the user to have a valid APB user accounts.  To access all private endpoints, include the token as follows:
 
 ````http
 http://localhost:8080/api/<getRESTfulEndpointFromBelow>
