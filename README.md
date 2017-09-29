@@ -78,7 +78,7 @@ Authorization: Basic <base64 encoded usernamepassword>
 
  Method  | Access | Description |
 | ------- |------- | ----------- |
-| PUT     | Public | update **user** |
+| PUT     | Private | update **user** |
 
 ````http
 http://localhost:8080/api/users/<userId>
