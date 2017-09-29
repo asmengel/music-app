@@ -32,6 +32,10 @@ localhost:8080/api/music/songs?song=purple
 
 If not specified, request bodies and request headers are not required.  E.g. for most get endpoints, the request body can be blank, or if populated, will be ignored.
 
+## IDs
+
+Each entity in the database has a read-only unique Mongo Object Id.  See https://docs.mongodb.com/manual/reference/method/ObjectId/.  All APB references between collections require this ID, which is the `_id` property.
+
 ## Users
 
 **Create User Account**
@@ -95,7 +99,7 @@ http://localhost:8080/api/users/<userId>
 }
 ````
 
-## Accessing Private Endpoints**
+## Accessing Private Endpoints
 
 The API APB will respond to a successful login with a JavaScript Web Token.  All endpoints identified as "Private" require the user to have a valid APB user accounts.  To access all private endpoints, include the token as follows:
 
@@ -114,7 +118,7 @@ Authorization: Bearer <javascript web token>
 | GET     | Public | Load 20 artists with albums and songs. Can be useful for teaser content. |
 
 ````http
-http://localhost:8080/api/music/artists
+http://localhost:8080/api/music/
 ````
 
 | Method  | Access | Description |
@@ -247,7 +251,7 @@ Administrator access is required to edit the music database.  Contact us to inqu
 ````http
 http://localhost:8080/api/music/artists 
 ````
->*request body* `Content Type` `Application/json`
+>*request body, artistName is required, other fields are optional* `Content Type` `Application/json`
 
 ````json
 {
